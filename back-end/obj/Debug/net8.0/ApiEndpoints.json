@@ -898,6 +898,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "back_end.Controllers.AuthController",
+    "Method": "Register",
+    "RelativePath": "customer/Auth/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "back_end.Data.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "back_end.Controllers.AuthController",
+    "Method": "Sigin",
+    "RelativePath": "customer/Auth/sigin",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "back_end.Models.LoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "back_end.Controllers.MenuCategoryController",
     "Method": "GetAllCategory",
     "RelativePath": "customer/MenuCategory",

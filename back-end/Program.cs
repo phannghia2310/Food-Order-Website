@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using dotenv.net;
+using DotNetEnv;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using back_end.Data;
@@ -12,9 +12,48 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DotEnv.Load();
+Env.Load();
 
 // Add services to the container.
+builder.Configuration.AddEnvironmentVariables();
+
+var envConnectionString = Environment.GetEnvironmentVariable("FOODORDER_DB_CONNECTION_STRING");
+var envJwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+var envJwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+var envJwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+var envJwtExpiryDuration = Environment.GetEnvironmentVariable("JWT_EXPIRY_DURATION_IN_MINUTES");
+var envPaypalAppId = Environment.GetEnvironmentVariable("PAYPAL_APP_ID");
+var envPaypalAppSecret = Environment.GetEnvironmentVariable("PAYPAL_APP_SECRET");
+var envPaypalMode = Environment.GetEnvironmentVariable("PAYPAL_MODE");
+var envVnPayTmnCode = Environment.GetEnvironmentVariable("VNPAY_TMNCODE");
+var envVnPayHashSecret = Environment.GetEnvironmentVariable("VNPAY_HASH_SECRET");
+var envVnPayBaseUrl = Environment.GetEnvironmentVariable("VNPAY_BASE_URL");
+var envVnPayVersion = Environment.GetEnvironmentVariable("VNPAY_VERSION");
+var envVnPayCommand = Environment.GetEnvironmentVariable("VNPAY_COMMAND");
+var envVnPayCurrCode = Environment.GetEnvironmentVariable("VNPAY_CURR_CODE");
+var envVnPayLocale = Environment.GetEnvironmentVariable("VNPAY_LOCALE");
+var envVnPayPaymentBackReturnUrl = Environment.GetEnvironmentVariable("VNPAY_PAYMENT_BACK_RETURN_URL");
+var envGoogleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+var envGoogleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+
+if (envConnectionString != null) builder.Configuration["ConnectionStrings:FoodOrder"] = envConnectionString;
+if (envJwtKey != null) builder.Configuration["Jwt:Key"] = envJwtKey;
+if (envJwtIssuer != null) builder.Configuration["Jwt:Issuer"] = envJwtIssuer;
+if (envJwtAudience != null) builder.Configuration["Jwt:Audience"] = envJwtAudience;
+if (envJwtExpiryDuration != null) builder.Configuration["Jwt:ExpiryDurationInMinutes"] = envJwtExpiryDuration;
+if (envPaypalAppId != null) builder.Configuration["PaypalOptions:AppId"] = envPaypalAppId;
+if (envPaypalAppSecret != null) builder.Configuration["PaypalOptions:AppSecret"] = envPaypalAppSecret;
+if (envPaypalMode != null) builder.Configuration["PaypalOptions:Mode"] = envPaypalMode;
+if (envVnPayTmnCode != null) builder.Configuration["VnPayOptions:TmnCode"] = envVnPayTmnCode;
+if (envVnPayHashSecret != null) builder.Configuration["VnPayOptions:HashSecret"] = envVnPayHashSecret;
+if (envVnPayBaseUrl != null) builder.Configuration["VnPayOptions:BaseUrl"] = envVnPayBaseUrl;
+if (envVnPayVersion != null) builder.Configuration["VnPayOptions:Version"] = envVnPayVersion;
+if (envVnPayCommand != null) builder.Configuration["VnPayOptions:Command"] = envVnPayCommand;
+if (envVnPayCurrCode != null) builder.Configuration["VnPayOptions:CurrCode"] = envVnPayCurrCode;
+if (envVnPayLocale != null) builder.Configuration["VnPayOptions:Locale"] = envVnPayLocale;
+if (envVnPayPaymentBackReturnUrl != null) builder.Configuration["VnPayOptions:PaymentBackReturnUrl"] = envVnPayPaymentBackReturnUrl;
+if (envGoogleClientId != null) builder.Configuration["GoogleKeys:ClientId"] = envGoogleClientId;
+if (envGoogleClientSecret != null) builder.Configuration["GoogleKeys:ClientSecret"] = envGoogleClientSecret;
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<FoodOrderContext>(options =>

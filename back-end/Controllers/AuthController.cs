@@ -28,7 +28,7 @@ namespace back_end.Controllers
         {
             if(await _service.EmailExistsAsync(user.Email!))
             {
-                return Conflict("Account with this email already exists"); ;
+                return Conflict("Account with this email already exists");
             }
 
             if (user.Password!.Length < 8)
