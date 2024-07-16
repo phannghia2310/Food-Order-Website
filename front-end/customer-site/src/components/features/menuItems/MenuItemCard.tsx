@@ -1,5 +1,5 @@
 import MenuItem from "@/types/MenuItem";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../../util/ContextProvider";
 import { useSession } from "next-auth/react";
 import { Button, Link } from "@nextui-org/react";
@@ -10,7 +10,15 @@ interface MenuItemCardProps {
 
 const MenuItemCard = ({ menuItem }: MenuItemCardProps) => {
   const { data: session } = useSession();
+  const [customer, setCustomer] = useState(null);
   const { addToCart } = useContext(CartContext);
+
+  useEffect(() => {
+    const customerData = localStorage.getItem("customer");
+    if (customerData) {
+      setCustomer(JSON.parse(customerData));
+    }
+  }, []);
 
   function handleAddToCartClick() {
       addToCart(menuItem);
@@ -33,7 +41,7 @@ const MenuItemCard = ({ menuItem }: MenuItemCardProps) => {
             <p className="text-primary">
               ${(menuItem.price as number).toFixed(2)}
             </p>
-            {session ? (
+            {customer ? (
               <button
                 className="border-2 bg-dark hover:bg-primary hover:text-dark rounded-full transition-all whitespace-nowrap px-4 py-2"
                 onClick={handleAddToCartClick}

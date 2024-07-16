@@ -1,13 +1,13 @@
 interface OrderSummaryProps {
   orderId?: string;
   subtotal: number,
-  deviveryFee: number,
+  deliveryFee: number,
   discount: number,
   paid: boolean
 }
 
-const OrderSummary = ({ orderId, subtotal, deviveryFee, discount, paid }: OrderSummaryProps) => {
-  const total = subtotal + deviveryFee + discount;
+const OrderSummary = ({ orderId, subtotal, deliveryFee, discount, paid }: OrderSummaryProps) => {
+  const total = subtotal + deliveryFee + discount;
   return (
     <>
       <div className='grid grid-cols-8 pt-2'>
@@ -19,7 +19,7 @@ const OrderSummary = ({ orderId, subtotal, deviveryFee, discount, paid }: OrderS
       <div className='grid grid-cols-8 pt-1'>
         <div className='pl-4 col-span-7 flex justify-between text-gray-400'>
           <span>Delivery fee</span>
-          <span>${deviveryFee.toFixed(2)}</span>
+          <span>${deliveryFee.toFixed(2)}</span>
         </div>
       </div>
       <div className='grid grid-cols-8 pt-1 pb-2 border-b border-dashed'>

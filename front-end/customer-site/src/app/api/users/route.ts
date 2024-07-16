@@ -1,13 +1,28 @@
-import { User } from "@/app/models/User";
-import mongoose from "mongoose";
-import { NextResponse } from "next/server";
-import { isAdmin } from "../auth/[...nextauth]/route";
+import axios from "axios";
 
-export async function GET() {
-  mongoose.connect(process.env.MONGODB_URI!);
-  if (await isAdmin()) {
-    const users = await User.find();
-    return NextResponse.json(users);
-  }
-  return NextResponse.json([]);
-}
+const API_URL = "https://localhost:7133";
+
+export const register = ({ name, email, password }: any) => {
+  return axios.post(`${API_URL}/customer/auth/register`, { name, email, password });
+};
+
+export const signin = ({ email, password }: any) => {
+  return axios.post(`${API_URL}/customer/auth/signin`, { email, password });
+};
+
+export const signinWithGoogle = (idToken: any) => {
+  return axios.post(`${API_URL}/customer/auth/signin/google`, { idToken });
+};
+
+export const update = (id: any, data: any) => {
+  return axios.put(`${API_URL}/customer/auth/update/${id}`, data, {
+  });
+};
+
+export const upload = (formData: any) => {
+  return axios.post(`${API_URL}/customer/auth/upload`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};

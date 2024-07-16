@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using back_end.Helpers;
 using back_end.Hubs;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,16 +79,9 @@ builder.Services.AddSingleton(x => new PaypalClient(
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultSignInScheme = "CustomerAuth";
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    .AddCookie("CustomerAuth", options =>
-    {
-        options.LoginPath = "/log-in";
-    })
-    .AddCookie("AdminAuth", options =>
-    {
-        options.LoginPath = "/Admin/User/Login";
-    })
     .AddGoogle(options =>
     {
         options.ClientId = builder.Configuration["GoogleKeys:ClientId"]!;
@@ -105,15 +99,35 @@ builder.Services.AddAuthentication(options =>
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                return Task.CompletedTask;
+            },
+            OnTokenValidated = context =>
+            {
+                Console.WriteLine("Token validated for user: " + context.Principal!.Identity!.Name);
+                return Task.CompletedTask;
+            },
+            OnChallenge = context =>
+            {
+                Console.WriteLine("OnChallenge error: " + context.ErrorDescription);
+                return Task.CompletedTask;
+            }
+        };
     });
 builder.Services.AddScoped<FoodOrderContext>();
+builder.Services.AddScoped<UserService>();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin", builder =>
-        builder.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-
-    options.AddPolicy("CustomerPolicy", builder =>
-        builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        });
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -134,6 +148,10 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSignalR();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();  // Log to console
+builder.Logging.AddDebug();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -146,8 +164,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("AllowSpecificOrigin");
-app.UseCors("CustomerPolicy");
+//app.UseCors("AllowSpecificOrigin");
+//app.UseCors("CustomerPolicy");
+
+app.UseCors("AllowAllOrigins");
 
 app.UseSession();
 
@@ -155,13 +175,15 @@ app.UseRouting();
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<ChatHub>("/chatHub");
+    _ = endpoints.MapHub<ChatHub>("/chatHub");
 });
 
 app.MapControllerRoute(

@@ -1,17 +1,12 @@
 type UserProfile = {
-  _id?: string;
+  userId?: string;
   name: string;
   email?: string;
-  image: string;
+  imageUrl: string;
   phone: string;
-  streetAddress: string;
-  postalCode: string;
-  city: string;
-  state: string;
-  country: string;
+  address: string;
   isAdmin: boolean;
-  createdAt?: string;
-  updatedAt?: string;
+  createdDate?: string;
 };
 
 export default UserProfile;

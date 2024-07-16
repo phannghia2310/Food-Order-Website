@@ -16,8 +16,8 @@ const CartPage = () => {
 
   useEffect(() => {
     if (profileData) {
-      const { phone, streetAddress, city, state, country, postalCode } = profileData;
-      setAddress({ phone, streetAddress, city, state, country, postalCode });
+      const { phone, address } = profileData;
+      setAddress({ phone, address });
     }
   }, [profileData])
 
@@ -92,7 +92,7 @@ const CartPage = () => {
                 onRemove={() => removeCartProduct(index)} productPrice={calCartProductPrice(product)} />
               ))}
             </div>
-            <OrderSummary subtotal={subtotal} deviveryFee={5} discount={0} paid={false} />
+            <OrderSummary subtotal={subtotal} deliveryFee={5} discount={0} paid={false} />
           </div>
           <div className='col-span-2'>
             <h2 className='font-semibold py-3 text-primary'>

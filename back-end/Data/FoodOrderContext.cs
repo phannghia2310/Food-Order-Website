@@ -87,9 +87,11 @@ public partial class FoodOrderContext : DbContext
             entity.ToTable("Order");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.CustomerName).HasMaxLength(50);
             entity.Property(e => e.DeliveryDate).HasColumnType("datetime");
             entity.Property(e => e.OrderDate).HasColumnType("datetime");
             entity.Property(e => e.Payment).HasMaxLength(50);
+            entity.Property(e => e.Phone).HasMaxLength(50);
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
@@ -128,7 +130,6 @@ public partial class FoodOrderContext : DbContext
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.ImageUrl).HasColumnName("ImageURL");
-            entity.Property(e => e.ProductName).HasMaxLength(200);
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)

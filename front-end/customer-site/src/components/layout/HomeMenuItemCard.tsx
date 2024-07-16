@@ -2,6 +2,7 @@
 import MenuItem from "@/types/MenuItem";
 import { Button, Link } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 interface HomeMenuItemCardProps {
   menuItem: MenuItem;
@@ -10,6 +11,14 @@ interface HomeMenuItemCardProps {
 
 const HomeMenuItemCard = ({ menuItem, index }: HomeMenuItemCardProps) => {
   const { data: session } = useSession();
+  const [customer, setCustomer] = useState(null);
+
+  useEffect(() => {
+    const customerData = localStorage.getItem("customer");
+    if(customerData) {
+      setCustomer(JSON.parse(customerData));
+    }
+  }, []);
 
   if (index % 6 < 3) {
     return (
@@ -34,7 +43,7 @@ const HomeMenuItemCard = ({ menuItem, index }: HomeMenuItemCardProps) => {
               </p>
               <Button
                 as={Link}
-                href={session ? "/menu" : "/login"}
+                href={customer ? "/menu" : "/login"}
                 radius="none"
                 size="sm"
                 className="bg-transparent border hover:bg-primary hover:text-dark"

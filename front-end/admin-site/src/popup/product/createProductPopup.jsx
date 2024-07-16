@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Typography, Input } from "@material-tailwind/react";
-import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import { createProduct, uploadProductImage } from "@/api/productApi";
 import DefaultProduct from "/img/product/default-product.png";
 import { getAllCategory } from "@/api/categoryApi";

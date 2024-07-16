@@ -12,9 +12,8 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/react";
-import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ChevronDownIcon } from "@/icons/ChevronDownIcon";
 import { UserIcon } from "@/icons/UserIcon";
 import { ShoppingBagIcon } from "@/icons/ShoppingBagIcon";
@@ -22,12 +21,27 @@ import { SignOutIcon } from "@/icons/SignOutIcon";
 import { usePathname } from "next/navigation";
 import { CartContext } from "../../util/ContextProvider";
 import { useProfile } from "../hooks/useProfile";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
-  const { data: session } = useSession();
   const { cartProducts } = useContext(CartContext);
   const pathname = usePathname();
   const { data: profileData } = useProfile();
+  const [customer, setCustomer] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const customerData = localStorage.getItem("customer");
+    if (customerData) {
+      setCustomer(JSON.parse(customerData));
+    }
+  }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("customer");
+    window.location.assign("/login");
+  };
 
   return (
     <Navbar
@@ -67,7 +81,7 @@ const Header = () => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        {profileData ? (
+        {customer ? (
           <div className="flex items-center h-full">
             <Dropdown className="text-gray-300">
               <DropdownTrigger>
@@ -75,7 +89,7 @@ const Header = () => {
                   className="bg-transparent h-full"
                   startContent={
                     <Avatar
-                      src={profileData?.image ? profileData.image : ""}
+                      src={profileData?.imageUrl ? `/assets/user/${profileData.imageUrl}` : ""}
                       isBordered
                       color="primary"
                       size="sm"
@@ -109,7 +123,7 @@ const Header = () => {
                 <DropdownItem
                   key="signOut"
                   startContent={<SignOutIcon className={"w-6"} />}
-                  onClick={() => signOut({ callbackUrl: "/" })}
+                  onClick={handleSignOut}
                 >
                   Sign Out
                 </DropdownItem>
@@ -130,21 +144,17 @@ const Header = () => {
           </div>
         ) : (
           <div className="flex gap-6 items-center">
-            {session === null && (
-              <>
-                <Link href={"/login"} className="hover:text-primary">
-                  Login
-                </Link>
-                <Button
-                  as={Link}
-                  color="primary"
-                  href={"/register"}
-                  className="font-semibold rounded-full px-6 py-2 text-dark"
-                >
-                  Sign Up
-                </Button>
-              </>
-            )}
+            <Link href={"/login"} className="hover:text-primary">
+              Login
+            </Link>
+            <Button
+              as={Link}
+              color="primary"
+              href={"/register"}
+              className="font-semibold rounded-full px-6 py-2 text-dark"
+            >
+              Sign Up
+            </Button>
           </div>
         )}
       </NavbarContent>

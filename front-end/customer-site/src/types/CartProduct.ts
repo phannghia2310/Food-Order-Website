@@ -1,11 +1,8 @@
-import MenuItem from "./MenuItem"
-import MenuItemAddOn from "./MenuItemAddOn"
+import MenuItem from "./MenuItem";
 
 type CartProduct = {
-  _id?: string,
-  menuItem: MenuItem,
-  selectedSize: MenuItemAddOn | null,
-  selectedExtras: MenuItemAddOn[]
-}
+  productId?: string;
+  menuItem: MenuItem;
+};
 
 export default CartProduct;
