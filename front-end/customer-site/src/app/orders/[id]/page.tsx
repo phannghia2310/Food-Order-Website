@@ -59,7 +59,7 @@ const OrderPage = () => {
               {order.cartProducts.map((product: CartProductInfo, index: number) => (
                 <CartProduct key={index} product={product} productPrice={calCartProductPrice(product)} />
               ))}
-              <OrderSummary orderId={order._id} subtotal={subtotal} deliveryFee={5} discount={0} paid={order.paid} />
+              <OrderSummary orderId={order.orderId} subtotal={subtotal} deliveryFee={5} discount={0} status={order.status} />
             </div>
             <div className='col-span-2'>
               <h2 className='font-semibold py-3 text-primary'>Delivery Information</h2>

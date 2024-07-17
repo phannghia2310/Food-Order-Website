@@ -87,6 +87,7 @@ public partial class FoodOrderContext : DbContext
             entity.ToTable("Order");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.CustomerEmail).HasMaxLength(50);
             entity.Property(e => e.CustomerName).HasMaxLength(50);
             entity.Property(e => e.DeliveryDate).HasColumnType("datetime");
             entity.Property(e => e.OrderDate).HasColumnType("datetime");
@@ -105,14 +106,12 @@ public partial class FoodOrderContext : DbContext
 
             entity.ToTable("OrderDetail");
 
-            entity.HasIndex(e => e.OrderId, "UQ__OrderDet__C3905BAE89B669C1").IsUnique();
-
             entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
-            entity.HasOne(d => d.Order).WithOne(p => p.OrderDetail)
-                .HasForeignKey<OrderDetail>(d => d.OrderId)
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
+                .HasForeignKey(d => d.OrderId)
                 .HasConstraintName("fk_OrderDetail_Order");
 
             entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)

@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using Google;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -33,6 +34,7 @@ namespace back_end.Helpers
         {
             public string intent { get; set; }
             public List<PurchaseUnit> purchase_units { get; set; } = new();
+            public ApplicationContext application_context { get; set; }
         }
 
         public sealed class CreateOrderResponse
@@ -151,6 +153,12 @@ namespace back_end.Helpers
             public Paypal paypal { get; set; }
         }
 
+        public sealed class ApplicationContext
+        {
+            public string return_url { get; set; }
+            public string cancel_url { get; set; }
+        }
+
         private async Task<AuthResponse> Authenticate()
         {
             var auth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{ClientId}:{ClientSecret}"));
@@ -197,6 +205,11 @@ namespace back_end.Helpers
                             value = value
                         }
                     }
+                },
+                application_context = new ApplicationContext
+                {
+                    return_url = "http://localhost:3000/success",
+                    cancel_url = "http://localhost:3000/cancel"
                 }
             };
 

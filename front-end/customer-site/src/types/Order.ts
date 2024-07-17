@@ -1,17 +1,17 @@
 import CartProduct from "./CartProduct"
 
 type Order = {
-  _id?: string,
-  userEmail: string,
+  orderId?: string,
+  orderDate: string,
+  deliveryDate: string,
+  fee: string,
+  total: string,
+  customerName: string,
+  address: string,
   phone: string,
-  streetAddress: string,
-  city: string,
-  state: string,
-  country: string,
-  postalCode: string,
+  payment: string,
+  status: string,
   cartProducts: CartProduct[],
-  paid: boolean,
-  createdAt: string,
 }
 
 export default Order;

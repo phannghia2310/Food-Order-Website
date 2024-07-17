@@ -1,25 +1,11 @@
-import mongoose from "mongoose";
-import { getServerSession } from "next-auth";
-import { authOptions, isAdmin } from "../auth/[...nextauth]/route";
-import { User } from "@/app/models/User";
-import { Order } from "@/app/models/Order";
-import { NextRequest, NextResponse } from "next/server";
+import axios from "axios";
 
-export async function GET(req: NextRequest) {
-  mongoose.connect(process.env.MONGODB_URI!);
+const API_URL = "https://localhost:7133";
 
-  const session = await getServerSession(authOptions);
-  const userEmail = session?.user?.email;
-  const admin = await isAdmin();
+export const getListCart = (id: any) => {
+  return axios.get(`${API_URL}/customer/cart/list/${id}`);
+};
 
-  const url = new URL(req.url);
-  const _id = url.searchParams.get("_id");
-  if (_id) {
-    return NextResponse.json(await Order.findById(_id));
-  }
-  if (admin) {
-    return NextResponse.json(await Order.find());
-  } else {
-    return NextResponse.json(await Order.find({ userEmail: userEmail }));
-  }
-}
+export const getOrderDetails = (id: any) => {
+  return axios.get(`${API_URL}/customer/cart/details/${id}`);
+};

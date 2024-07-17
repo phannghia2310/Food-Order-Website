@@ -19,6 +19,8 @@ public partial class Order
 
     public string? CustomerName { get; set; }
 
+    public string? CustomerEmail { get; set; }
+
     public string? Address { get; set; }
 
     public string? Phone { get; set; }
@@ -27,7 +29,7 @@ public partial class Order
 
     public string? Payment { get; set; }
 
-    public virtual OrderDetail? OrderDetail { get; set; }
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual User? User { get; set; }
 }

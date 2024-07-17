@@ -5,28 +5,33 @@ import { useProfile } from "@/components/hooks/useProfile";
 import Order from "@/types/Order";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
-import { useSession } from "next-auth/react";
 import Loader from "@/components/common/Loader";
+import { getListCart } from "../api/orders/route";
 
 const OrdersPage = () => {
-  const { data: session, status } = useSession();
   const { data: profileData, loading } = useProfile();
   const isAdmin = profileData?.isAdmin;
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    fetch(`/api/orders`)
-      .then((res) => res.json())
-      .then((data) => {
-        setOrders(data.reverse());
-      });
-  }, []);
+    if (profileData?.userId) {
+      getListCart(profileData.userId)
+        .then((res) => {
+          setOrders(res.data);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch orders:", err);
+        });
+    }
+  }, [profileData?.userId]);
 
-  if (status === "unauthenticated") {
-    redirect("/login");
-  }
+  useEffect(() => {
+    if (!loading && !profileData) {
+      redirect("/login");
+    }
+  }, [loading, profileData]);
 
-  if (status === "loading" || (loading && session)) {
+  if (loading) {
     return <Loader className={""} />;
   }
 

@@ -186,6 +186,19 @@ app.UseEndpoints(endpoints =>
     _ = endpoints.MapHub<ChatHub>("/chatHub");
 });
 
+app.Use(async (context, next) =>
+{
+    string nonce = "MPZW9bE7mUQpuI/pppVhboQ/YxYRXp8LAnLHDAgom0mxyQkB"; // Implement a function to generate a nonce
+    context.Response.Headers.Add("Content-Security-Policy",
+        $"script-src 'nonce-{nonce}' 'self' https://*.paypal.com ...");
+
+    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+    context.Response.Headers.Add("X-Xss-Protection", "1; mode=block");
+
+    await next();
+});
+
 app.MapControllerRoute(
     name: "MyArea",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}")

@@ -11,9 +11,27 @@ const Addressinputs = ({
   setAddressProps,
   disabled,
 }: AddressinputsProps) => {
-  const { phone, address } = addressProps;
+  const { name, email, phone, address } = addressProps;
   return (
     <>
+      <label> Customer name</label>
+      <input
+        type="text"
+        placeholder="Customer name"
+        disabled={disabled}
+        value={name ?? ""}
+        onChange={(e) => setAddressProps("name", e.target.value)}
+        className="input"
+      />
+      <label> Customer email</label>
+      <input
+        type="email"
+        placeholder="Customer email"
+        disabled={disabled}
+        value={email ?? ""}
+        onChange={(e) => setAddressProps("email", e.target.value)}
+        className="input"
+      />
       <label> Phone number</label>
       <input
         type="tel"
