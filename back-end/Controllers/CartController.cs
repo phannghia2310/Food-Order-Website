@@ -4,6 +4,7 @@ using back_end.Helpers;
 using back_end.Models;
 using back_end.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using static back_end.Helpers.PaypalClient;
 
 namespace back_end.Controllers
@@ -35,8 +36,98 @@ namespace back_end.Controllers
         [HttpGet("details/{id}")]
         public ActionResult<List<OrderDetail>> GetOrderDetails(int id)
         {
-            var details = _context.OrderDetails.Where(d => d.OrderId == id).ToList();
-            return Ok(details);
+            var order = _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(p => p.Product)
+                .FirstOrDefault(o => o.OrderId == id);
+
+            if(order == null)
+            {
+                return NotFound();
+            }
+
+            var cartProducts = new List<OrderDetail>();
+
+            foreach (var item in order.OrderDetails)
+            {
+                var cartProduct = new OrderDetail
+                {
+                    OrderId = order.OrderId,
+                    ProductId = item.Product!.ProductId,
+                    Price = item.Product.Price,
+                    Product = new Product
+                    {
+                        ProductId = item.Product!.ProductId,
+                        ProductName = item.Product.ProductName,
+                        ImageUrl = item.Product.ImageUrl,
+                        Description = item.Product.Description,
+                        CategoryId = item.Product.CategoryId,
+                        Price = item.Product.Price,
+                        Quantity = item.Quantity,
+                    },
+                    Quantity = item.Quantity
+                };
+
+                cartProducts.Add(cartProduct);
+            }
+
+            var result = new Order
+            {
+                OrderId = order.OrderId,
+                OrderDate = order.OrderDate,
+                DeliveryDate = order.DeliveryDate,
+                Fee = order.Fee,
+                Total = order.Total,
+                CustomerName = order.CustomerName,
+                CustomerEmail = order.CustomerEmail,
+                Address = order.Address,
+                Phone = order.Phone,
+                Payment = order.Payment,
+                Status = order.Status,
+                OrderDetails = cartProducts,
+            };
+
+            return Ok(result);
+        }
+
+        [HttpPut("change-status/{id}")]
+        public IActionResult ChangeStatus(int id)
+        {
+            var order = _context.Orders.Find(id);
+
+            if(order == null)
+            {
+                return NotFound();
+            }
+
+            if(order.Payment == "COD")
+            {
+                if(order.Status == 0)
+                {
+                    order.Status = 5;
+                }
+
+                if(order.Status == 3)
+                {
+                    order.Status = 4;
+                }
+            }
+            else
+            {
+                if(order.Status == 1)
+                {
+                    order.Status = 5;
+                }
+
+                if(order.Status == 3)
+                {
+                    order.Status = 4;
+                }
+            }
+
+            _context.Orders.Update(order);
+            _context.SaveChanges();
+            return Ok(order);
         }
 
         #region COD Payment

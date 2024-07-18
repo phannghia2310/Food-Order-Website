@@ -66,7 +66,7 @@ namespace back_end.Areas.Admin.Controllers
         }
 
         [HttpPut("change-status/{id}", Name = "ChangeOrderStatus")]
-        public IActionResult ChangeOrderSatus(int id)
+        public async Task<IActionResult> ChangeOrderSatus(int id)
         {
             var order = _context.Orders.Find(id);
 
@@ -109,7 +109,7 @@ namespace back_end.Areas.Admin.Controllers
             }
 
             _context.Orders.Update(order);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(order);
         }

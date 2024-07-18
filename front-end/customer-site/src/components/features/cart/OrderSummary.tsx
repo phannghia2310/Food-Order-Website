@@ -3,7 +3,7 @@ interface OrderSummaryProps {
   subtotal: number;
   deliveryFee: number;
   discount: number;
-  status: string;
+  status: number;
 }
 
 const OrderSummary = ({
@@ -44,7 +44,7 @@ const OrderSummary = ({
         <div className="grid grid-cols-8 pt-1">
           <div className="pl-4 col-span-7 flex justify-between font-semibold">
             <span>Amount Paid</span>
-            <span>${status ? total.toFixed(2) : "0.00"}</span>
+            <span>${status !== 0 ? total.toFixed(2) : "0.00"}</span>
           </div>
         </div>
       )}

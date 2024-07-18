@@ -7,11 +7,12 @@ type Order = {
   fee: string,
   total: string,
   customerName: string,
+  customerEmail: string,
   address: string,
   phone: string,
   payment: string,
-  status: string,
-  cartProducts: CartProduct[],
+  status: number,
+  orderDetails: CartProduct[],
 }
 
 export default Order;

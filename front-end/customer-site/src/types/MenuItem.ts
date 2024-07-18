@@ -1,5 +1,3 @@
-import MenuItemAddOn from "./MenuItemAddOn";
-
 type MenuItem = {
   productId?: string;
   productName: string;

@@ -52,8 +52,8 @@ const CartPage = () => {
     event.preventDefault();
 
     const orderDetails = cartProducts.map((product) => ({
-      productId: product.menuItem.productId,
-      price: product.menuItem.price,
+      productId: product.product.productId,
+      price: product.product.price,
       quantity: 1,
     }));
 
@@ -118,7 +118,7 @@ const CartPage = () => {
               subtotal={subtotal}
               deliveryFee={5}
               discount={0}
-              status={""}
+              status={1}
             />
           </div>
           <div className="col-span-2">

@@ -9,17 +9,12 @@ import toast from "react-hot-toast";
 export const CartContext = createContext<CartContext>({} as CartContext);
 
 export function calCartProductPrice(product: CartProduct): number {
-  let price = product.menuItem.price as number;
-  // if (product.selectedSize) {
-  //   price += product.selectedSize.price as number;
-  // }
-  // if (product.selectedExtras.length > 0) {
-  //   for (const extra of product.selectedExtras) {
-  //     price += extra.price as number;
-  //   }
-  // }
-  return price;
+  if (product && product.product && product.product.price !== undefined) {
+    return (product.product.price as number) * product.quantity;
+  }
+  return 0;
 }
+
 
 export const AppContextProvider = ({
   children,
@@ -36,12 +31,12 @@ export const AppContextProvider = ({
   }, [ls]);
 
   function addToCart(
-    menuItem: MenuItem
+    product: MenuItem
   ) {
     setCartProducts((prevProducts) => {
       const newProducts = [
         ...prevProducts,
-        { menuItem },
+        { product, quantity: 1 },
       ];
       saveCartProductsToLocalStorage(newProducts);
       return newProducts;

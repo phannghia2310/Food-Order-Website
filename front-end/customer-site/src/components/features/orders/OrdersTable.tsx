@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -6,19 +7,43 @@ import {
   TableRow,
   TableCell,
   Tooltip,
-  Chip,
 } from "@nextui-org/react";
 import Link from "next/link";
 import Order from "@/types/Order";
 import { EyeFilledIcon } from "@/icons/EyeFilledIcon";
+import { TrashIcon } from "@/icons/TrashIcon";
+import { CheckIcon } from "@/icons/CheckIcon";
 import { getReadableDateTime } from "@/libs/datetime";
+import OrderStatusCell from "./StatusCell";
+import { changeStatus } from "@/app/api/orders/route";
 
 interface OrdersTableProps {
-  orders: Order[];
+  orders?: Order[];
   isAdmin: boolean;
 }
 
-const OrdersTable = ({ orders, isAdmin }: OrdersTableProps) => {
+const OrdersTable = ({ orders = [], isAdmin }: OrdersTableProps) => {
+  const [orderList, setOrderList] = useState(orders);
+
+  useEffect(() => {
+    setOrderList(orders);
+  }, [orders]);
+
+  const changStatusOrder = async (orderId: any) => {
+    try {
+      const response = await  changeStatus(orderId);
+      const updatedOrder = response.data;
+      setOrderList((prevOrders) =>
+        prevOrders.map((order) =>
+          order.orderId === orderId ? updatedOrder : order
+        )
+      );
+      window.location.assign("/orders");
+    } catch (error) {
+      console.error("Failed to change order status:", error);
+    }
+  };
+
   return (
     <Table
       aria-label="Orders Table"
@@ -34,15 +59,15 @@ const OrdersTable = ({ orders, isAdmin }: OrdersTableProps) => {
         <TableColumn>Order Number</TableColumn>
         <TableColumn>Order Date</TableColumn>
         <TableColumn>Delivery Date (expected)</TableColumn>
-        <TableColumn>Item Name</TableColumn>
         <TableColumn>Fee</TableColumn>
         <TableColumn>Total</TableColumn>
-        <TableColumn>Payment Status</TableColumn>
+        <TableColumn>Payment Method</TableColumn>
+        <TableColumn>Status</TableColumn>
         <TableColumn>Actions</TableColumn>
       </TableHeader>
-      {orders.length > 0 ? (
+      {orderList.length > 0 ? (
         <TableBody>
-          {orders.map((order) => (
+          {orderList.map((order) => (
             <TableRow key={order.orderId}>
               <TableCell>{order.orderId}</TableCell>
               <TableCell>
@@ -55,39 +80,14 @@ const OrdersTable = ({ orders, isAdmin }: OrdersTableProps) => {
                   {getReadableDateTime(order.deliveryDate)}
                 </p>
               </TableCell>
-              <TableCell className="text-sm">
-                {order.cartProducts.length > 1
-                  ? `${order.cartProducts[0].menuItem.productName} + ${
-                      order.cartProducts.length - 1
-                    } more`
-                  : order.cartProducts[0].menuItem.productName}
-              </TableCell>
               <TableCell>{order.fee}</TableCell>
               <TableCell>{order.total}</TableCell>
               <TableCell>{order.payment}</TableCell>
               <TableCell>
-                {order.status ? (
-                  <Chip
-                    className="capitalize"
-                    color="success"
-                    size="md"
-                    variant="flat"
-                  >
-                    Paid
-                  </Chip>
-                ) : (
-                  <Chip
-                    className="capitalize"
-                    color="danger"
-                    size="md"
-                    variant="flat"
-                  >
-                    Cancelled
-                  </Chip>
-                )}
+                <OrderStatusCell status={order.status} />
               </TableCell>
               <TableCell>
-                <div className="relative flex items-center justify-center">
+                <div className="relative flex items-center justify-around">
                   <Tooltip content="View order">
                     <Link
                       className="text-lg cursor-pointer active:opacity-50"
@@ -96,6 +96,24 @@ const OrdersTable = ({ orders, isAdmin }: OrdersTableProps) => {
                       <EyeFilledIcon className={"w-6"} />
                     </Link>
                   </Tooltip>
+                  {order.status === 0 && (
+                    <Tooltip content="Cancel">
+                      <button
+                        onClick={() => changStatusOrder(order.orderId)}
+                      >
+                        <TrashIcon className={"w-6"} />
+                      </button>
+                    </Tooltip>
+                  )}
+                  {order.status === 3 && (
+                    <Tooltip content="Accept">
+                    <button
+                      onClick={() => changStatusOrder(order.orderId)}
+                    >
+                      <CheckIcon className={"w-6"} />
+                    </button>
+                  </Tooltip>
+                  )}
                 </div>
               </TableCell>
             </TableRow>

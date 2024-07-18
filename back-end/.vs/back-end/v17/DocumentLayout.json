@@ -1,20 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\data\\foodordercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:data\\foodordercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -22,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -31,45 +18,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "FoodOrderContext.cs",
-              "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Data\\FoodOrderContext.cs",
-              "RelativeDocumentMoniker": "Data\\FoodOrderContext.cs",
-              "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Data\\FoodOrderContext.cs",
-              "RelativeToolTip": "Data\\FoodOrderContext.cs",
-              "ViewState": "AQIAABUAAAAAAAAAAAAAACIAAAB9AQAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T15:37:00.455Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAMoAAAAAAAAAAADgv9MAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-15T06:39:07.757Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CartController.cs",
-              "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Controllers\\CartController.cs",
-              "RelativeDocumentMoniker": "Controllers\\CartController.cs",
-              "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Controllers\\CartController.cs",
-              "RelativeToolTip": "Controllers\\CartController.cs",
-              "ViewState": "AQIAAFcAAAAAAAAAAAAywGkAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T04:04:24.639Z",
-              "EditorCaption": ""
             }
           ]
         }

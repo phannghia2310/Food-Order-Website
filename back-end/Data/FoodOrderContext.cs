@@ -98,6 +98,8 @@ public partial class FoodOrderContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("fk_Order_User");
+
+            entity.HasMany(o => o.OrderDetails);
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>

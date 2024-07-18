@@ -72,6 +72,7 @@ export function Order() {
                     order.orderId === updatedOrder.orderId ? updatedOrder : order
                 )
             );
+            window.location.assign("/dashboard/order");
         } catch (error) {
             console.error("Error changing order status:", error);
         }
@@ -175,7 +176,7 @@ export function Order() {
                                                     as="a"
                                                     href="#"
                                                     onClick={() => handleChangeStatus(order.orderId)}
-                                                    className="text-xs font-semibold text-blue-gray-600 hover:text-red-800 transition duration-300"
+                                                    className="text-xs font-semibold text-blue-gray-600 hover:text-green-800 transition duration-300"
                                                 >
                                                     Accept
                                                 </Typography>

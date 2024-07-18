@@ -17,6 +17,8 @@ const HomeMenu = ({ className }: SectionProps) => {
     });
   }, []);
 
+  console.log(menuItems);
+
   return (
     <section className={className}>
       <SectionHeader

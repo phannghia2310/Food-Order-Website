@@ -14,14 +14,14 @@ const CartProduct = ({ product, productPrice, onRemove }: CartProductProps) => {
       <div className="col-span-2">
         <div
           style={{
-            backgroundImage: `url(/assets/product/${product.menuItem.imageUrl})`,
+            backgroundImage: `url(/assets/product/${product.product.imageUrl})`,
             borderRadius: "10%",
           }}
           className="bg-cover bg-center bg-no-repeat mb-4 w-[120px] h-[120px]"
         ></div>
       </div>
       <div className="col-span-3 px-4">
-        <p className="font-semibold">{product.menuItem.productName}</p>
+        <p className="font-semibold">{product.product.productName}</p>
       </div>
       <div className="items-start text-center">
         <p className="font-semibold">Quantity</p>
