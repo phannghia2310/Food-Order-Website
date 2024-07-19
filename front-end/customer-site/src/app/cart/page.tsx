@@ -8,7 +8,10 @@ import { ChevronLeftIcon } from "@/icons/ChevronLeftIcon";
 import { Button, Link } from "@nextui-org/react";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { codPayment } from "../api/checkout/route";
+import {
+  codPayment,
+  createPayPalOrder,
+} from "../api/checkout/route";
 
 interface ProfileInfo {
   name: string;
@@ -18,9 +21,11 @@ interface ProfileInfo {
 }
 
 const CartPage = () => {
-  const { cartProducts, removeCartProduct, clearCart } = useContext(CartContext);
+  const { cartProducts, removeCartProduct, clearCart } =
+    useContext(CartContext);
   const [info, setInfo] = useState<Partial<ProfileInfo>>({});
   const { data: profileData } = useProfile();
+  const [isSubmit, setIsSubmit] = useState(false);
 
   useEffect(() => {
     if (profileData) {
@@ -35,7 +40,7 @@ const CartPage = () => {
         toast.error("Payment failed 🙁");
       }
     }
-  }, []);
+  }, [clearCart]);
 
   let subtotal = 0;
   cartProducts.forEach((cartProduct) => {
@@ -46,10 +51,9 @@ const CartPage = () => {
     setInfo((prevInfo) => ({ ...prevInfo, [propName]: value }));
   }
 
-  async function proceedToCheckOut(
-    event: FormEvent<HTMLFormElement>
-  ): Promise<void> {
+  async function proceedToCheckOut(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setIsSubmit(true);
 
     const orderDetails = cartProducts.map((product) => ({
       productId: product.product.productId,
@@ -73,11 +77,48 @@ const CartPage = () => {
       toast.success("Payment success!");
       clearCart();
       setTimeout(() => {
-        window.location.assign('/');
+        window.location.assign("/");
       }, 2000);
     } catch (error) {
       toast.error("Something went wrong, please try again later.");
       console.log(error);
+    } finally {
+      setIsSubmit(false);
+    }
+  }
+
+  async function proceedToPayPal(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsSubmit(true);
+
+    const orderDetails = cartProducts.map((product) => ({
+      productId: product.product.productId,
+      price: product.product.price,
+      quantity: 1,
+    }));
+
+    const orderModel = {
+      userId: profileData?.userId,
+      fee: 5,
+      total: subtotal + 5,
+      customerName: info.name,
+      customerEmail: info.email,
+      address: info.address,
+      phone: info.phone,
+      details: orderDetails,
+    };
+
+    localStorage.setItem("orderModel", JSON.stringify(orderModel));
+
+    try {
+      const response = await createPayPalOrder(orderModel);
+      const { approvalUrl } = response.data;
+      window.location.assign(approvalUrl);
+    } catch (error) {
+      toast.error("Something went wrong, please try again later.");
+      console.log(error);
+    } finally {
+      setIsSubmit(false);
     }
   }
 
@@ -135,7 +176,17 @@ const CartPage = () => {
                     disabled={false}
                   />
                 </div>
-                <Button type='submit' color='primary' fullWidth>Pay ${(subtotal + 5).toFixed(2)}</Button>
+                <Button type="submit" color="primary" fullWidth disabled={isSubmit}>
+                  Cash on Delivery
+                </Button>
+              </form>
+              <form
+                className="flex flex-col gap-3 mt-3"
+                onSubmit={proceedToPayPal}
+              >
+                <Button type="submit" color="primary" fullWidth disabled={isSubmit}>
+                  Pay with PayPal
+                </Button>
               </form>
             </div>
           </div>

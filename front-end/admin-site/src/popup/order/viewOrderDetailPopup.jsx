@@ -13,7 +13,7 @@ const ViewOrderDetailPopup = ({ isOpen, onClose, order }) => {
                 console.log(err);
             });
         }
-    });
+    }, [order]);
 
     return (
         <div className={`fixed inset-0 z-50 overflow-y-auto ${isOpen ? "" : "hidden"}`}>
@@ -37,10 +37,10 @@ const ViewOrderDetailPopup = ({ isOpen, onClose, order }) => {
                             Close
                         </Button>
                     </div>
-                    <table className="w-full min-w-[640px] table-auto flex justify-center">
+                    <table className="w-full table-auto">
                         <thead>
                             <tr>
-                                {["Order Id", "Order Detail Id", "Product Name", "Price", "Quantity", "Image", ""].map((el) => (
+                                {["Order Id", "Order Detail Id", "Product Name", "Price", "Quantity", "Image"].map((el) => (
                                     <th
                                         key={el}
                                         className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -88,16 +88,11 @@ const ViewOrderDetailPopup = ({ isOpen, onClose, order }) => {
                                             </Typography>
                                         </td>
                                         <td className={className}>
-                                            <div className="flex items-center gap-4">
-                                                <Typography
-                                                    as="a"
-                                                    href="#"
-                                                    onClick={() => openViewOrderDetailPopup(order)}
-                                                    className="text-xs font-semibold text-blue-gray-600 hover:text-yellow-800 transition duration-300"
-                                                >
-                                                    View Details
-                                                </Typography>
-                                            </div>
+                                            <img
+                                                src={`/img/product/${detail.imageUrl}`}
+                                                alt={detail.productName}
+                                                className="w-20 h-20 object-cover"
+                                            />
                                         </td>
                                     </tr>
                                 );

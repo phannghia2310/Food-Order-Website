@@ -7,7 +7,7 @@ export const getOrderByStatus = (id) => {
 };
 
 export const getDetailByOrder = (id) => {
-    return axios.get(`${API_URL}/admin/order/get-detail-by-status/${id}`);
+    return axios.get(`${API_URL}/admin/order/get-detail-by-order/${id}`);
 };
 
 export const changeOrderStatus = (id) => {

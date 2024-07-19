@@ -15,14 +15,12 @@ namespace back_end.Controllers
     {
         private readonly FoodOrderContext _context;
         private readonly PaypalClient _paypalClient;
-        private readonly IVnPayService _vpnPayService;
         private readonly IEmailSender _emailSender;
 
-        public CartController(FoodOrderContext context, PaypalClient paypalClient, IVnPayService vnPayService, IEmailSender emailSender)
+        public CartController(FoodOrderContext context, PaypalClient paypalClient, IEmailSender emailSender)
         {
             _context = context;
             _paypalClient = paypalClient;
-            _vpnPayService = vnPayService;
             _emailSender = emailSender;
         }
 
@@ -191,6 +189,79 @@ namespace back_end.Controllers
         #endregion
 
         #region PayPal Payment
+        [HttpPost("create-paypal-order")]
+        public async Task<IActionResult> CreatePaypalOrder([FromBody] Models.OrderModel model)
+        {
+            try
+            {
+                var orderResponse = await _paypalClient.CreateOrder(
+                    value: model.Total.ToString(),
+                    currency: "USD",
+                    reference: Guid.NewGuid().ToString()
+                );
+
+                var approvalUrl = orderResponse.links.FirstOrDefault(link => link.rel.Equals("approve"))?.href;
+
+                return Ok(new { approvalUrl });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("capture-paypal-order")]
+        public async Task<IActionResult> CapturePaypaOrder([FromQuery] string orderId, [FromBody] Models.OrderModel model)
+        {
+            try
+            {
+                var captureResponse = await _paypalClient.CaptureOrder(orderId);
+
+                if(captureResponse.status.ToLower() != "completed")
+                {
+                    return BadRequest("Payment not completed");
+                }
+
+                var order = new Order
+                {
+                    UserId = model.UserId,
+                    Fee = model.Fee,
+                    Total = model.Total,
+                    OrderDate = DateTime.Now,
+                    DeliveryDate = DateTime.Now.AddHours(3),
+                    CustomerName = model.CustomerName,
+                    CustomerEmail = model.CustomerEmail,
+                    Address = model.Address,
+                    Phone = model.Phone,
+                    Status = 1,
+                    Payment = "PAYPAL",
+                 };
+
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+
+                foreach (var item in model.Details!)
+                {
+                    var orderDetail = new OrderDetail
+                    {
+                        OrderId = order.OrderId,
+                        ProductId = item.ProductId,
+                        Price = item.Price,
+                        Quantity = item.Quantity,
+                    };
+
+                    _context.OrderDetails.Add(orderDetail);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
         #endregion
     }
 }

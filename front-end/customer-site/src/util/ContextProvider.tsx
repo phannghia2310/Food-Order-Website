@@ -15,7 +15,6 @@ export function calCartProductPrice(product: CartProduct): number {
   return 0;
 }
 
-
 export const AppContextProvider = ({
   children,
 }: {

@@ -141,27 +141,42 @@ namespace back_end.Controllers
             }
 
             // Define both upload paths
-            var uploadFolder = Path.Combine(@"C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\front-end\customer-site\public\assets", "user");
+            var adminUploadFolder = Path.Combine(@"C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\front-end\admin-site\public\img", "user");
+            var customerUploadFolder = Path.Combine(@"C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\front-end\customer-site\public\assets", "user");
 
             // Ensure both directories exist
-            if (!Directory.Exists(uploadFolder))
+            if (!Directory.Exists(adminUploadFolder))
             {
-                Directory.CreateDirectory(uploadFolder);
+                Directory.CreateDirectory(adminUploadFolder);
+            }
+            if (!Directory.Exists(customerUploadFolder))
+            {
+                Directory.CreateDirectory(customerUploadFolder);
             }
 
             // Generate file name and paths
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            var filePath = Path.Combine(uploadFolder, fileName);
+            var adminFilePath = Path.Combine(adminUploadFolder, fileName);
+            var customerFilePath = Path.Combine(customerUploadFolder, fileName);
 
             // Check and delete existing files with the same name in both directories
-            var existingFilePath = Directory.GetFiles(uploadFolder, fileName).FirstOrDefault();
-            if (existingFilePath != null)
+            var existingAdminFilePath = Directory.GetFiles(adminUploadFolder, fileName).FirstOrDefault();
+            var existingCustomerFilePath = Directory.GetFiles(customerUploadFolder, fileName).FirstOrDefault();
+            if (existingAdminFilePath != null)
             {
-                System.IO.File.Delete(existingFilePath);
+                System.IO.File.Delete(existingAdminFilePath);
+            }
+            if (existingCustomerFilePath != null)
+            {
+                System.IO.File.Delete(existingCustomerFilePath);
             }
 
             // Save the file to both directories
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            using (var stream = new FileStream(adminFilePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            using (var stream = new FileStream(customerFilePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
