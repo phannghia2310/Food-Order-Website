@@ -55,10 +55,11 @@ public partial class FoodOrderContext : DbContext
 
             entity.Property(e => e.ContactId).HasColumnName("ContactID");
             entity.Property(e => e.AdminId).HasColumnName("AdminID");
-            entity.Property(e => e.CustomerName).HasMaxLength(50);
-            entity.Property(e => e.Email).HasMaxLength(50);
+            entity.Property(e => e.Email).HasMaxLength(200);
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.Phone).HasMaxLength(50);
             entity.Property(e => e.PostingDate).HasColumnType("datetime");
-            entity.Property(e => e.Subject).HasMaxLength(200);
 
             entity.HasOne(d => d.Admin).WithMany(p => p.Contacts)
                 .HasForeignKey(d => d.AdminId)
@@ -78,6 +79,10 @@ public partial class FoodOrderContext : DbContext
                 .HasColumnName("Message");
             entity.Property(e => e.Timestamp).HasColumnType("datetime");
             entity.Property(e => e.ToUser).HasMaxLength(50);
+
+            entity.HasOne(d => d.User).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_Message_User");
         });
 
         modelBuilder.Entity<Order>(entity =>
@@ -98,8 +103,6 @@ public partial class FoodOrderContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("fk_Order_User");
-
-            entity.HasMany(o => o.OrderDetails);
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>

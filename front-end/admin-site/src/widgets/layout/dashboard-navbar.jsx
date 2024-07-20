@@ -163,12 +163,6 @@ export function DashboardNavbar() {
               {unreadMessages.length > 0 ? (
                 unreadMessages.map((message, index) => (
                   <MenuItem key={index} className="flex items-center gap-3">
-                    <Avatar
-                      src="https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"
-                      alt="item-1"
-                      size="sm"
-                      variant="circular"
-                    />
                     <div>
                       <Typography
                         variant="small"

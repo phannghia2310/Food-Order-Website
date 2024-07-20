@@ -48,7 +48,7 @@ export function Contact() {
                     <table className="w-full min-w-[640px] table-auto">
                         <thead>
                             <tr>
-                                {["Contact Id", "Customer Name", "Email", "Subject", "Question", "Answer", "Posting Date", "Admin Id", ""].map((el) => (
+                                {["Contact Id", "Customer Name", "Email", "Message", "Reply", "Posting Date", "Admin Id", ""].map((el) => (
                                     <th
                                         key={el}
                                         className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -80,7 +80,7 @@ export function Contact() {
                                             </td>
                                             <td className={className}>
                                                 <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    {contact.customerName}
+                                                    {contact.firstName} {contact.lastName}
                                                 </Typography>
                                             </td>
                                             <td className={className}>
@@ -90,19 +90,14 @@ export function Contact() {
                                             </td>
                                             <td className={className}>
                                                 <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    {contact.subject}
+                                                    {contact.message}
                                                 </Typography>
                                             </td>
                                             <td className={className}>
-                                                <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    {contact.question}
-                                                </Typography>
-                                            </td>
-                                            <td className={className}>
-                                                {contact.answer ? (
+                                                {contact.reply ? (
                                                     <>
                                                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                            {contact.answer}
+                                                            {contact.reply}
                                                         </Typography>
                                                     </>
                                                 ) : (
@@ -128,14 +123,18 @@ export function Contact() {
                                             </td>
                                             <td className={className}>
                                                 <div className="flex items-center gap-4">
-                                                    <Typography
-                                                        as="a"
-                                                        href="#"
-                                                        onClick={() => openAnswerContactPopup(contact)}
-                                                        className="text-xs font-semibold text-blue-gray-600 hover:text-green-800 transition duration-300"
-                                                    >
-                                                        Answer
-                                                    </Typography>
+                                                    {contact.reply === null ? (
+                                                            <Typography
+                                                                as="a"
+                                                                href="#"
+                                                                onClick={() => openAnswerContactPopup(contact)}
+                                                                className="text-xs font-semibold text-blue-gray-600 hover:text-green-800 transition duration-300"
+                                                            >
+                                                                Answer
+                                                            </Typography>
+                                                        ) : (
+                                                            <></>
+                                                        )}
                                                     <Typography
                                                         as="a"
                                                         href="#"

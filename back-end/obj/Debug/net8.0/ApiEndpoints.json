@@ -122,14 +122,14 @@
     "ContainingType": "back_end.Areas.Admin.Controllers.ChatController",
     "Method": "GetMessages",
     "RelativePath": "admin/Chat/get-messages",
-    "HttpMethod": "POST",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "message",
-        "Type": "back_end.Areas.Admin.Models.MessageModel",
-        "IsRequired": true
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -138,13 +138,13 @@
     "ContainingType": "back_end.Areas.Admin.Controllers.ChatController",
     "Method": "MarkAsRead",
     "RelativePath": "admin/Chat/mark-as-read",
-    "HttpMethod": "POST",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "message",
-        "Type": "back_end.Areas.Admin.Models.MessageModel",
+        "Name": "model",
+        "Type": "back_end.Areas.Admin.Models.MaskAsReadModel",
         "IsRequired": true
       }
     ],
@@ -246,44 +246,9 @@
         "IsRequired": true
       },
       {
-        "Name": "ContactId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "CustomerName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Subject",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Question",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Answer",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "PostingDate",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "AdminId",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "Name": "contact",
+        "Type": "back_end.Areas.Admin.Models.ContactModel",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -396,7 +361,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[back_end.Data.OrderDetail, back-end, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.List\u00601[[back_end.Areas.Admin.Models.OrderDetailModel, back-end, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1104,6 +1069,48 @@
     ]
   },
   {
+    "ContainingType": "back_end.Controllers.CusChatController",
+    "Method": "SaveMessage",
+    "RelativePath": "customer/CusChat/save-message",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "back_end.Models.CusChatModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "back_end.Controllers.CusContactController",
+    "Method": "SendInquiry",
+    "RelativePath": "customer/CusContact/send-inquiry",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "back_end.Models.CusContactModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "back_end.Data.Contact",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "back_end.Controllers.MenuCategoryController",
     "Method": "GetAllCategory",
     "RelativePath": "customer/MenuCategory",
@@ -1160,26 +1167,6 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.List\u00601[[back_end.Data.Product, back-end, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "back_end.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[back_end.WeatherForecast, back-end, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

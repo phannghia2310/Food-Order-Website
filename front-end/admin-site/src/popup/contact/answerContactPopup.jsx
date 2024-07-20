@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Textarea } from "@material-tailwind/react";
 import { answerContact } from "@/api/contactApi";
 
@@ -7,7 +7,7 @@ const AnswerContactPopup = ({ isOpen, onClose, contact }) => {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        if(contact) {
+        if (contact) {
             setFormData(contact);
         }
     }, [contact]);
@@ -16,8 +16,8 @@ const AnswerContactPopup = ({ isOpen, onClose, contact }) => {
         let valid = true;
         const newErrors = {};
 
-        if(!formData.answer) {
-            newErrors.answer = "Answer is required";
+        if (!formData.reply) {
+            newErrors.reply = "Answer is required";
             valid = false;
         }
 
@@ -27,7 +27,7 @@ const AnswerContactPopup = ({ isOpen, onClose, contact }) => {
 
     const handleAnswer = async (e) => {
         e.preventDefault();
-        if(validateAnswer()) {
+        if (validateAnswer()) {
             try {
                 const response = await answerContact(formData);
                 console.log(response.data);
@@ -36,7 +36,7 @@ const AnswerContactPopup = ({ isOpen, onClose, contact }) => {
             } catch (err) {
                 console.error(err);
                 const newErrors = {};
-                newErrors.answer = err.response.data;
+                newErrors.reply = err.response.data;
                 setErrors(newErrors);
             }
         }
@@ -45,10 +45,12 @@ const AnswerContactPopup = ({ isOpen, onClose, contact }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         const user = localStorage.getItem('user');
+        const userData = JSON.parse(user);
         setFormData(prevData => ({
             ...prevData,
             [name]: value,
-            adminId: user.userId,
+            adminId: userData.userId,
+            admin: userData,
         }));
     }
 
@@ -64,13 +66,13 @@ const AnswerContactPopup = ({ isOpen, onClose, contact }) => {
                         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <div className="sm:flex sm:items-start">
                                 <div className="w-full">
-                                    <Typography variant="small" color="blue-gray" className="mt-3 font-medium">Subject: <span>{formData.subject}</span></Typography>
-                                    <Typography variant="small" color="blue-gray" className="mt-3 font-medium">Question: <span>{formData.question}</span></Typography>
-                                    <Typography variant="small" color="blue-gray" className="mt-3 font-medium">Answer</Typography>
-                                    <Textarea type="text" name="answer" id="answer" size="lg" value={formData.answer || ''} onChange={handleChange} error={errors.answer}/>
-                                    {errors.answer && 
+                                    <Typography variant="small" color="blue-gray" className="mt-3 font-medium">From: <span>{formData.email}</span></Typography>
+                                    <Typography variant="small" color="blue-gray" className="mt-3 font-medium">Question: <span>{formData.message}</span></Typography>
+                                    <Typography variant="small" color="blue-gray" className="mt-3 font-medium">Reply</Typography>
+                                    <Textarea type="text" name="reply" id="reply" size="lg" value={formData.reply || ''} onChange={handleChange} error={errors.reply} />
+                                    {errors.reply &&
                                         <Typography variant="small" color="red" className="mt-1">
-                                            {errors.answer}
+                                            {errors.reply}
                                         </Typography>
                                     }
                                 </div>

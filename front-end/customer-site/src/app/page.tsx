@@ -1,4 +1,4 @@
-import ContactSecton from "@/components/layout/ContactSection";
+import ContactSection from "@/components/layout/ContactSection";
 import HomeSlider from "@/components/layout/HomeSlider";
 import BusinessInfo from "@/components/layout/BusinessInfo";
 import AboutSection from "@/components/layout/AboutSection";
@@ -13,7 +13,7 @@ export default function Home() {
       <AboutSection />
       <ServicesSection />
       <HomeMenu className="pt-24" />
-      <ContactSecton className="pt-12" />
+      <ContactSection className="pt-12" />
     </>
   )
 }

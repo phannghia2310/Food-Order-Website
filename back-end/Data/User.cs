@@ -29,5 +29,7 @@ public partial class User
 
     public virtual ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

@@ -1,5 +1,6 @@
 ﻿using back_end.Areas.Admin.Models;
 using back_end.Data;
+using back_end.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace back_end.Areas.Admin.Controllers
@@ -10,10 +11,12 @@ namespace back_end.Areas.Admin.Controllers
     public class OrderController : Controller
     {
         private readonly FoodOrderContext _context;
+        private readonly IEmailSender _emailSender;
 
-        public OrderController(FoodOrderContext context)
+        public OrderController(FoodOrderContext context, IEmailSender emailSender)
         {
             _context = context;
+            _emailSender = emailSender;
         }
 
         [HttpGet(Name = "GetAllOrder")]
@@ -43,7 +46,7 @@ namespace back_end.Areas.Admin.Controllers
         }
 
         [HttpGet("get-detail-by-order/{id}", Name = "GetDetailByOrderId")]
-        public ActionResult<List<OrderDetail>> GetOrderDetail(int id)
+        public ActionResult<List<OrderDetailModel>> GetOrderDetail(int id)
         {
             var details = _context.OrderDetails
                 .Where(d => d.OrderId == id)
@@ -111,7 +114,31 @@ namespace back_end.Areas.Admin.Controllers
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
 
-            return Ok(order);
+            var customer = _context.Users.SingleOrDefault(u => u.UserId == order.UserId);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            var statusDescription = _context.Statuses.SingleOrDefault(s => s.StatusId == order.Status)?.Description;
+
+            var receiver = customer.Email;
+            var subject = $"Order Status Update: {order.OrderId}";
+            var message = $"Hello {customer.Name},<br>" +
+                          $"We wanted to inform you that the status of your order (Order ID: {order.OrderId}) has been updated.<br>" +
+                          $"Current Status: <strong>{statusDescription}</strong><br>";
+
+            if (order.Status == 3)
+            {
+                message += $"Your order was delivered on {order.DeliveryDate:dd/MM/yyyy}.<br>";
+            }
+
+            message += $"<br>Thank you for shopping with us!<br>Best regards,<br>Fly Pizza";
+
+            await _emailSender.SendEmailAsync(receiver!, subject, message);
+
+
+            return NoContent();
         }
     }
 }

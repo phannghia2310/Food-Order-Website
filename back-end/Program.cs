@@ -50,10 +50,11 @@ foreach (var envVar in envVars)
 }
 
 builder.Services.AddControllers();
-    //.AddJsonOptions(options =>
+    //.AddNewtonsoftJson(options =>
     //{
-    //    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    //    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     //});
+
 builder.Services.AddDbContext<FoodOrderContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("FoodOrder"));
@@ -126,7 +127,7 @@ builder.Services.AddCors(options =>
             builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
         });
 });
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -151,7 +152,6 @@ builder.Logging.AddDebug();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -160,9 +160,6 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
     });
 }
-
-//app.UseCors("AllowSpecificOrigin");
-//app.UseCors("CustomerPolicy");
 
 app.UseCors("AllowAllOrigins");
 

@@ -21,10 +21,11 @@ namespace back_end.Areas.Admin.Controllers
         {
             var newMessage = new Message
             {
-                FromUser = message.FromUser,
-                ToUser = message.ToUser,
-                Message1 = message.Message1,
+                FromUser = message.FromUser!,
+                ToUser = message.ToUser!,
+                Message1 = message.Message1!,
                 Timestamp = message.Timestamp,
+                UserId = message.UserId,
                 IsRead = message.IsRead,
             };
 
@@ -51,10 +52,11 @@ namespace back_end.Areas.Admin.Controllers
         [HttpGet("contact-list")]
         public IActionResult GetContactList()
         {
-            var contacts = _context.Messages.Where(m => m.ToUser == "Admin").GroupBy(m => m.FromUser)
+            var contacts = _context.Messages.Where(m => m.ToUser == "Admin").GroupBy(m => m.UserId)
                 .Select(g => new
                 {
-                    Contact = g.Key,
+                    Id = g.Key,
+                    Contact = _context.Users.FirstOrDefault(u => u.UserId == g.Key)!.Name,
                     LastMessage = g.OrderByDescending(m => m.Timestamp).FirstOrDefault()!.Message1,
                     LastMessageTimestamp = g.Max(m => m.Timestamp),
                     UnreadMessagesCount = g.Count(m => m.IsRead == 0),
@@ -63,10 +65,10 @@ namespace back_end.Areas.Admin.Controllers
             return Ok(contacts);
         }
 
-        [HttpPost("mark-as-read")]
-        public async Task<IActionResult> MarkAsRead([FromBody] MessageModel message)
+        [HttpPut("mark-as-read")]
+        public async Task<IActionResult> MarkAsRead([FromBody] MaskAsReadModel model)
         {
-            var messages = _context.Messages.Where(m => m.FromUser == message.FromUser).ToList();
+            var messages = _context.Messages.Where(m => m.UserId == model.Id).ToList();
 
             foreach (var msg in messages)
             {
@@ -77,11 +79,11 @@ namespace back_end.Areas.Admin.Controllers
             return Ok();
         }
 
-        [HttpPost("get-messages")]
-        public IActionResult GetMessages([FromBody] MessageModel message)
+        [HttpGet("get-messages")]
+        public IActionResult GetMessages([FromQuery] int id)
         {
-            var messages = _context.Messages.Where(m => (m.FromUser == message.FromUser && m.ToUser == "Admin")
-                                || (m.FromUser == "Admin" && m.ToUser == message.FromUser))
+            var messages = _context.Messages.Where(m => (m.UserId == id && m.ToUser == "Admin")
+                                || (m.FromUser == "Admin" && m.UserId == id))
                             .OrderBy(m => m.Timestamp)
                             .ToList();
             return Ok(messages);

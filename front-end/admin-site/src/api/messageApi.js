@@ -6,16 +6,24 @@ export const getContacts = () => {
     return axios.get(`${API_URL}/admin/chat/contact-list`);
 };
 
-export const getMessages = (fromUser) => {
-    return axios.post(`${API_URL}/admin/chat/get-messages`, { FromUser: fromUser });
+export const getMessages = (userId) => {
+    return axios.get(`${API_URL}/admin/chat/get-messages`, {
+        params: {
+            id: userId,
+        },
+    });
 };
 
 export const saveMessage = (message) => {
     return axios.post(`${API_URL}/admin/chat/save-message`, message);
 };
 
-export const markAsRead = (fromUser) => {
-    return axios.post(`${API_URL}/admin/chat/mark-as-read`, { FromUser: fromUser });
+export const markAsRead = (userId) => {
+    return axios.put(`${API_URL}/admin/chat/mark-as-read`, { id: userId }, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
 };
 
 export const getUnreadMessagesCount = () => {

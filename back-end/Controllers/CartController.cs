@@ -5,6 +5,7 @@ using back_end.Models;
 using back_end.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 using static back_end.Helpers.PaypalClient;
 
 namespace back_end.Controllers
@@ -173,6 +174,49 @@ namespace back_end.Controllers
 
                     transaction.Commit();
 
+                    var htmlTable = new StringBuilder();
+                    htmlTable.Append("<table style='border-collapse: collapse; width: 100%;'>");
+                    htmlTable.Append("<tr>");
+                    htmlTable.Append("<th style='border: 1px solid black; padding: 10px; background-color: #f2f2f2; text-align: left;'>Product Name</th>");
+                    htmlTable.Append("<th style='border: 1px solid black; padding: 10px; background-color: #f2f2f2; text-align: left;'>Image</th>");
+                    htmlTable.Append("<th style='border: 1px solid black; padding: 10px; background-color: #f2f2f2; text-align: left;'>Price</th>");
+                    htmlTable.Append("<th style='border: 1px solid black; padding: 10px; background-color: #f2f2f2; text-align: left;'>Quantity</th>");
+                    htmlTable.Append("<th style='border: 1px solid black; padding: 10px; background-color: #f2f2f2; text-align: left;'>Total</th>");
+                    htmlTable.Append("</tr>");
+
+                    foreach (var ct in model.Details)
+                    {
+                        var product = _context.Products.SingleOrDefault(p => p.ProductId == ct.ProductId);
+                        if (product != null)
+                        {
+                            htmlTable.Append("<tr>");
+                            htmlTable.Append($"<td style='border: 1px solid black; padding: 10px;'>{product.ProductName}</td>");
+                            htmlTable.Append($"<td style='border: 1px solid black; padding: 10px;'><img src='{product.ImageUrl}' alt='Product Image' style='width:100px; height:auto;' /></td>");
+                            htmlTable.Append($"<td style='border: 1px solid black; padding: 10px;'>{ct.Price:C}</td>");
+                            htmlTable.Append($"<td style='border: 1px solid black; padding: 10px;'>{ct.Quantity}</td>");
+                            htmlTable.Append($"<td style='border: 1px solid black; padding: 10px;'>{(ct.Price * ct.Quantity):C}</td>");
+                            htmlTable.Append("</tr>");
+                        }
+                    }
+
+                    htmlTable.Append("</table>");
+
+                    var receiver = _context.Users.SingleOrDefault(kh => kh.UserId == order.UserId)?.Email;
+                    var subject = $"Order information: {order.OrderId}";
+                    var user = _context.Users.SingleOrDefault(kh => kh.UserId == order.UserId);
+                    var status = _context.Statuses.SingleOrDefault(s => s.StatusId == order.Status)?.Description;
+                    var message = $"Hello {user?.Name},<br>Below are your order details.<br><br>" +
+                                  $"Order ID: {order.OrderId}<br>" +
+                                  $"Order date: {order.OrderDate:dd/MM/yyyy}<br>" +
+                                  $"Delivery date (expected): {order.DeliveryDate:dd/MM/yyyy}<br><br>" +
+                                  $"{htmlTable}<br><br>" +
+                                  $"Total: {order.Total:C}<br><br>" +
+                                  $"Payment method: {order.Payment}<br><br>" +
+                                  $"Status: {status}";
+
+                    await _emailSender.SendEmailAsync(receiver!, subject, message);
+
+
                     return Ok();
                 }
                 catch (Exception ex)
@@ -254,6 +298,49 @@ namespace back_end.Controllers
                 }
 
                 await _context.SaveChangesAsync();
+
+                var htmlTable = new StringBuilder();
+                htmlTable.Append("<table style='border-collapse: collapse; width: 100%;'>");
+                htmlTable.Append("<tr>");
+                htmlTable.Append("<th style='border: 1px solid black; padding: 10px; background-color: #f2f2f2; text-align: left;'>Product Name</th>");
+                htmlTable.Append("<th style='border: 1px solid black; padding: 10px; background-color: #f2f2f2; text-align: left;'>Image</th>");
+                htmlTable.Append("<th style='border: 1px solid black; padding: 10px; background-color: #f2f2f2; text-align: left;'>Price</th>");
+                htmlTable.Append("<th style='border: 1px solid black; padding: 10px; background-color: #f2f2f2; text-align: left;'>Quantity</th>");
+                htmlTable.Append("<th style='border: 1px solid black; padding: 10px; background-color: #f2f2f2; text-align: left;'>Total</th>");
+                htmlTable.Append("</tr>");
+
+                foreach (var ct in model.Details)
+                {
+                    var product = _context.Products.SingleOrDefault(p => p.ProductId == ct.ProductId);
+                    if (product != null)
+                    {
+                        htmlTable.Append("<tr>");
+                        htmlTable.Append($"<td style='border: 1px solid black; padding: 10px;'>{product.ProductName}</td>");
+                        htmlTable.Append($"<td style='border: 1px solid black; padding: 10px;'><img src='{product.ImageUrl}' alt='Product Image' style='width:100px; height:auto;' /></td>");
+                        htmlTable.Append($"<td style='border: 1px solid black; padding: 10px;'>{ct.Price:C}</td>");
+                        htmlTable.Append($"<td style='border: 1px solid black; padding: 10px;'>{ct.Quantity}</td>");
+                        htmlTable.Append($"<td style='border: 1px solid black; padding: 10px;'>{(ct.Price * ct.Quantity):C}</td>");
+                        htmlTable.Append("</tr>");
+                    }
+                }
+
+                htmlTable.Append("</table>");
+
+                var receiver = _context.Users.SingleOrDefault(kh => kh.UserId == order.UserId)?.Email;
+                var subject = $"Order information: {order.OrderId}";
+                var user = _context.Users.SingleOrDefault(kh => kh.UserId == order.UserId);
+                var status = _context.Statuses.SingleOrDefault(s => s.StatusId == order.Status)?.Description;
+                var message = $"Hello {user?.Name},<br>Below are your order details.<br><br>" +
+                              $"Order ID: {order.OrderId}<br>" +
+                              $"Order date: {order.OrderDate:dd/MM/yyyy}<br>" +
+                              $"Delivery date (expected): {order.DeliveryDate:dd/MM/yyyy}<br><br>" +
+                              $"{htmlTable}<br><br>" +
+                              $"Total: {order.Total:C}<br><br>" +
+                              $"Payment method: {order.Payment}<br><br>" +
+                              $"Status: {status}";
+
+                await _emailSender.SendEmailAsync(receiver!, subject, message);
+
 
                 return Ok();
             }

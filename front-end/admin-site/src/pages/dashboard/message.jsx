@@ -9,7 +9,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { getContacts, getMessages, saveMessage, markAsRead } from "@/api/messageApi";
-import { HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnectionBuilder, HttpTransportType } from "@microsoft/signalr";
 
 export function Chat() {
   const [contacts, setContacts] = useState([]);
@@ -29,9 +29,22 @@ export function Chat() {
     };
 
     fetchData();
+  }, []);
+
+  const handleContactClick = async (contact) => {
+    setSelectedContact(contact);
+
+    if (connection) {
+      await connection.stop();
+    }
 
     const newConnection = new HubConnectionBuilder()
-      .withUrl("https://localhost:7133/chatHub")
+      .withUrl("https://localhost:7133/chatHub", {
+        transport: HttpTransportType.WebSockets,
+        withCredentials: false,
+        accessTokenFactory: () => contact.id,
+      })
+      .withAutomaticReconnect()
       .build();
 
     newConnection.start().then(() => {
@@ -45,24 +58,23 @@ export function Chat() {
 
     setConnection(newConnection);
 
-    return () => {
-      newConnection.stop();
-    };
-  }, []);
-
-  const handleContactClick = (contact) => {
-    setSelectedContact(contact);
-    getMessages(contact.contact).then(setMessages);
-    markAsRead(contact.contact);
+    try {
+      const response = await getMessages(contact.id);
+      setMessages(response.data);
+      await markAsRead(contact.id);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
   };
 
   const handleSendMessage = () => {
     const user = "Admin";
+    const userId = selectedContact.id;
     const contact = selectedContact.contact;
     const now = new Date();
     now.setHours(now.getHours() + 7);
 
-    connection.invoke("SendMessage", user, messageInput).catch((err) =>
+    connection.invoke("SendMessage", userId.toString(), user, messageInput).catch((err) =>
       console.error(err.toString())
     );
 
@@ -71,11 +83,14 @@ export function Chat() {
       ToUser: contact,
       Message1: messageInput,
       Timestamp: now,
+      UserId: userId,
       IsRead: 1,
-    });
+    }).catch((err) => console.log(err.toString()));
 
     setMessageInput("");
   };
+
+  console.log(messages);
 
   return (
     <section className="content">
@@ -86,20 +101,24 @@ export function Chat() {
               <a
                 key={contact.contact}
                 href="#"
-                className="list-group-item list-group-item-action mb-1"
+                className="list-group-item list-group-item-action"
                 onClick={() => handleContactClick(contact)}
               >
-                <div className="flex justify-between">
-                  <h5 className="mb-1">{contact.contact}</h5>
-                  <small>{new Date(contact.lastMessageTimestamp).toLocaleTimeString()}</small>
-                </div>
-                <div className="flex justify-between">
-                  <p className="mb-1">{contact.lastMessage}</p>
-                  {contact.unreadMessagesCount > 0 && (
-                    <small className="bg-danger fw-bold py-1 px-2 rounded">
-                      {contact.unreadMessagesCount}
-                    </small>
-                  )}
+                <div className={`${contact.unreadMessagesCount === 0 ? "bg-white text-black" : "bg-blue-500 text-white"} p-4 mr-4 rounded-lg mb-2`}>
+                  <div className="flex justify-between">
+                    <h5 className="font-semibold text-[18px] mb-1">{contact.contact}</h5>
+                    <small>{new Date(contact.lastMessageTimestamp).toLocaleTimeString()}</small>
+                  </div>
+                  <div className="flex justify-between">
+                    {contact.unreadMessagesCount > 0 && (
+                      <>
+                      <p className="mb-1">{contact.lastMessage}</p>
+                      <small className="bg-red-700 fw-bold py-1 px-2 rounded">
+                        {contact.unreadMessagesCount}
+                      </small>
+                      </>
+                    )}
+                  </div>
                 </div>
               </a>
             ))}

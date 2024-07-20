@@ -9,7 +9,7 @@ export const getAllContact = () => {
 export const answerContact = (formData) => {
     return axios.put(`${API_URL}/admin/contact/${formData.contactId}`, formData, {
         headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
         }
     });
 };

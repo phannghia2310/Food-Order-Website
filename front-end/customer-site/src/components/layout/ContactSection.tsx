@@ -5,7 +5,7 @@ import Map from "../common/Map";
 import { SectionProps } from "@/types/SectionProps";
 import ContactUsForm from "../common/form/ContactUsForm";
 
-const ContactSecton = ({ className }: SectionProps) => {
+const ContactSection = ({ className }: SectionProps) => {
   return (
     <section id="contact" className={className}>
       <div className="grid grid-cols-2">
@@ -24,4 +24,4 @@ const ContactSecton = ({ className }: SectionProps) => {
   )
 }
 
-export default ContactSecton;
+export default ContactSection;

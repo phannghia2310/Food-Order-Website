@@ -1,21 +1,25 @@
-﻿namespace back_end.Areas.Admin.Models
+﻿using back_end.Data;
+
+namespace back_end.Areas.Admin.Models
 {
     public class ContactModel
     {
-        public int ContactId { get; set; }
+        public string? FirstName { get; set; }
 
-        public string? CustomerName { get; set; }
+        public string? LastName { get; set; }
 
         public string? Email { get; set; }
 
-        public string? Subject { get; set; }
+        public string? Phone { get; set; }
 
-        public string? Question { get; set; }
+        public string? Message { get; set; }
 
-        public string? Answer { get; set; }
+        public string? Reply { get; set; }
 
         public DateTime? PostingDate { get; set; }
 
         public int? AdminId { get; set; }
+
+        public virtual User? Admin { get; set; }
     }
 }

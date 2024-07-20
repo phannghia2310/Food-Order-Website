@@ -15,5 +15,9 @@ public partial class Message
 
     public DateTime Timestamp { get; set; }
 
+    public int? UserId { get; set; }
+
     public int? IsRead { get; set; }
+
+    public virtual User? User { get; set; }
 }

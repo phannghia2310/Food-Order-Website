@@ -40,31 +40,38 @@ namespace back_end.Areas.Admin.Controllers
         }
 
         [HttpPut("{id}", Name = "AnswerContact")]
-        public IActionResult AnswerContact(int id, [FromForm] ContactModel contact)
+        public IActionResult AnswerContact(int id, [FromBody] ContactModel contact)
         {
-            var existingContact = _context.Contacts.Find(id);
+            var existingContact = _context.Contacts.Where(c => c.ContactId == id).FirstOrDefault();
             if(existingContact == null)
             {
                 return NotFound();
             }
 
-            existingContact.Answer = contact.Answer;
+            existingContact.Reply = contact.Reply;
             existingContact.AdminId = contact.AdminId;
+            existingContact.Admin = contact.Admin;
 
             _context.Contacts.Update(existingContact);
             _context.SaveChanges();
 
+            var admin = _context.Users.Where(a => a.UserId == contact.AdminId).FirstOrDefault();
+            if(admin == null)
+            {
+                return NotFound();
+            }
+
             var receiver = contact.Email;
-            var subject = contact.Subject;
-            var message = $"Hello {contact.CustomerName},\n\n" +
-                $"Your question: {contact.Question}.\n" +
-                $"The answer: {contact.Answer}.\n\n" +
-                $"Thank you for your attention. Your contribution is part of our development.\n\n" +
+            var subject = "Reply customer";
+            var message = $"Hello {contact.FirstName + " " + contact.LastName},<br><br>" +
+                $"Your question: {contact.Message}.<br>" +
+                $"The answer: {contact.Reply}.<br>" +
+                $"Thank you for your attention. Your contribution is part of our development.<br><br>" +
                 $"Best regards.";
 
             _emailSender.SendEmailAsync(receiver!, subject!, message);
 
-            return Ok(existingContact);
+            return NoContent();
         }
 
         [HttpDelete("{id}", Name = "DeleteContact")]
