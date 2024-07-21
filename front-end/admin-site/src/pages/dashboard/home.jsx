@@ -1,26 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
   Typography,
-  Card,
-  CardHeader,
-  CardBody,
-  IconButton,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Avatar,
-  Tooltip,
-  Progress,
 } from "@material-tailwind/react";
-import {
-  EllipsisVerticalIcon,
-  ArrowUpIcon,
-} from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
 import { StatisticsChart } from "@/widgets/charts";
 import { statisticsChartsData } from "@/data";
-import { BanknotesIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, ShoppingBagIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import { BanknotesIcon, ChartBarIcon, ClockIcon, ShoppingBagIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import { getStatistics } from "@/api/homeApi";
 
 export function Home() {
@@ -32,6 +17,7 @@ export function Home() {
       try {
         const data = await statisticsChartsData();
         setChartData(data);
+        console.log(data);
       } catch (error) {
         console.error('Error fetching chart data:', error);
       }

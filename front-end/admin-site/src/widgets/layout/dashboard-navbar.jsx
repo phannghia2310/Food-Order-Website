@@ -27,6 +27,7 @@ import {
   setOpenSidenav,
 } from "@/context";
 import { getUnreadMessagesCount, getUnreadMessages } from "@/api/messageApi";
+import { HttpTransportType, HubConnectionBuilder } from "@microsoft/signalr";
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -36,13 +37,70 @@ export function DashboardNavbar() {
   const [user, setUser] = useState(null);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState([]);
+  const [connection, setConnection] = useState(null);
 
-  useEffect(() => {
+  const fetchUnread = async () => {
     const user = localStorage.getItem('user');
     setUser(user);
 
-    getUnreadMessagesCount().then(response => setUnreadMessagesCount(response.data));
-    getUnreadMessages().then(response => setUnreadMessages(response.data));
+    await getUnreadMessagesCount().then(response => setUnreadMessagesCount(response.data));
+    await getUnreadMessages().then(response => setUnreadMessages(response.data));
+  };
+
+  useEffect(() => {
+    fetchUnread();
+  }, []);
+
+  useEffect(() => {
+    const setupConnection = async () => {
+      const newConnection = new HubConnectionBuilder()
+        .withUrl("https://localhost:7133/chatHub", {
+          transport: HttpTransportType.WebSockets,
+          withCredentials: false,
+        })
+        .withAutomaticReconnect()
+        .build();
+
+      newConnection.onclose(() => {
+        console.log("Connection closed.");
+      });
+
+      newConnection.onreconnecting(() => {
+        console.log("Connection lost. Attempting to reconnect...");
+      });
+
+      newConnection.onreconnected(() => {
+        console.log("Connection reestablished.");
+      });
+
+      newConnection.on("UpdateContact", async (user, message) => {
+        await fetchUnread();
+      });
+
+      try {
+        await newConnection.start();
+        console.log("SignalR Connected.");
+        setConnection(newConnection);
+      } catch (err) {
+        console.error("Connection failed: ", err);
+      }
+    };
+
+    setupConnection();
+
+    return () => {
+      const cleanup = async () => {
+        if (connection) {
+         try {
+            await connection.stop();
+            console.log("Connection stopped.");
+          } catch (err) {
+            console.error("Error stopping connection: ", err);
+          }
+        }
+      };
+      cleanup();
+    };
   }, []);
 
   const handleSignOut = () => {
@@ -64,16 +122,12 @@ export function DashboardNavbar() {
     return "Just now";
   }
 
-  // const handleMenuItemClick = (message) => {
-  //   navigate(`/chat/${message.fromUser}`, { state: { message } });
-  // }
-
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
       className={`rounded-xl transition-all ${fixedNavbar
-          ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
-          : "px-0 py-1"
+        ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
+        : "px-0 py-1"
         }`}
       fullWidth
       blurred={fixedNavbar}
@@ -153,13 +207,13 @@ export function DashboardNavbar() {
             <MenuHandler>
               <div className="relative text-[12px]">
                 <IconButton variant="text" color="blue-gray">
-                    <ChatBubbleLeftRightIcon className="relative h-5 w-5 text-blue-gray-500" />
+                  <ChatBubbleLeftRightIcon className="relative h-5 w-5 text-blue-gray-500" />
                 </IconButton>
                 <span className="absolute top-0 right-1 px-1 bg-red-800 rounded-full">{unreadMessagesCount}</span>
               </div>
 
             </MenuHandler>
-            <MenuList className="w-max border-0">
+            <MenuList className="w-max h-[260px] border-0">
               {unreadMessages.length > 0 ? (
                 unreadMessages.map((message, index) => (
                   <MenuItem key={index} className="flex items-center gap-3">

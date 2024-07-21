@@ -4,24 +4,24 @@ import { getWeeklyOrders, getTopSellingItems, getMonthlyRevenue } from "@/api/ho
 const fetchWeeklyOrders = async () => {
   const response = await getWeeklyOrders();
   const data = response.data;
-  const seriesData = data.map(item => item.Orders);
-  const categories = data.map(item => item.Day);
+  const seriesData = data.map(item => item.orders);
+  const categories = data.map(item => item.day);
   return { seriesData, categories };
 };
 
 const fetchTopSellingItems = async () => {
   const response = await getTopSellingItems();
   const data = response.data;
-  const seriesData = data.map(item => item.Sales);
-  const categories = data.map(item => item.ItemName);
+  const seriesData = data.map(item => item.sales);
+  const categories = data.map(item => item.itemName);
   return { seriesData, categories };
 };
 
 const fetchMonthlyRevenue = async () => {
   const response = await getMonthlyRevenue();
   const data = response.data;
-  const seriesData = data.map(item => item.Revenue);
-  const categories = data.map(item => item.Month);
+  const seriesData = data.map(item => item.revenue);
+  const categories = data.map(item => item.month);
   return { seriesData, categories };
 };
 
