@@ -1,0 +1,63 @@
+name: Deploy ASP.NET Core app to Azure Web App
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0.x' # Adjust this to the .NET version you're using
+
+    - name: Install dependencies
+      run: dotnet restore back-end/back-end.csproj # Adjust the path to your .csproj or .sln file
+
+    - name: Build
+      run: dotnet build back-end/back-end.csproj --configuration Release --no-restore # Adjust the path to your .csproj or .sln file
+
+    - name: Publish
+      run: dotnet publish back-end/back-end.csproj -c Release -o ${{ github.workspace }}/publish --no-build # Adjust the path to your .csproj or .sln file
+
+    - name: Install dotnet-ef tool
+      run: dotnet tool install --global dotnet-ef
+
+    - name: Add dotnet tools to PATH
+      run: echo "$(dirname $(dotnet tool list -g | grep 'dotnet-ef' | awk '{print $NF}'))" >> $GITHUB_PATH
+
+    - name: Run EF Core migrations
+      run: dotnet ef database update --project back-end/back-end.csproj
+      env:
+        FOODORDER_DB_CONNECTION_STRING: ${{ secrets.FOODORDER_DB_CONNECTION_STRING }}
+        JWT_KEY: ${{ secrets.JWT_KEY }}
+        JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
+        JWT_AUDIENCE: ${{ secrets.JWT_AUDIENCE }}
+        JWT_EXPIRY_DURATION_IN_MINUTES: ${{ secrets.JWT_EXPIRY_DURATION_IN_MINUTES }}
+        PAYPAL_APP_ID: ${{ secrets.PAYPAL_APP_ID }}
+        PAYPAL_APP_SECRET: ${{ secrets.PAYPAL_APP_SECRET }}
+        PAYPAL_MODE: ${{ secrets.PAYPAL_MODE }}
+        VNPAY_TMNCODE: ${{ secrets.VNPAY_TMNCODE }}
+        VNPAY_HASH_SECRET: ${{ secrets.VNPAY_HASH_SECRET }}
+        VNPAY_BASE_URL: ${{ secrets.VNPAY_BASE_URL }}
+        VNPAY_VERSION: ${{ secrets.VNPAY_VERSION }}
+        VNPAY_COMMAND: ${{ secrets.VNPAY_COMMAND }}
+        VNPAY_CURR_CODE: ${{ secrets.VNPAY_CURR_CODE }}
+        VNPAY_LOCALE: ${{ secrets.VNPAY_LOCALE }}
+        VNPAY_PAYMENT_BACK_RETURN_URL: ${{ secrets.VNPAY_PAYMENT_BACK_RETURN_URL }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+
+    - name: 'Deploy to Azure WebApp'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'app-food-order' # Replace with your App Service name
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ${{ github.workspace }}/publish

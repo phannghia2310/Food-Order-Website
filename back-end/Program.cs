@@ -146,6 +146,8 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSignalR();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+builder.Services.AddHealthChecks();
+
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();  // Log to console
 builder.Logging.AddDebug();
@@ -178,18 +180,19 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     _ = endpoints.MapHub<ChatHub>("/chatHub");
+    _ = endpoints.MapHealthChecks("/health");
 
 });
 
 app.Use(async (context, next) =>
 {
     string nonce = "MPZW9bE7mUQpuI/pppVhboQ/YxYRXp8LAnLHDAgom0mxyQkB"; // Implement a function to generate a nonce
-    context.Response.Headers.Add("Content-Security-Policy",
+    context.Response.Headers.Append("Content-Security-Policy",
         $"script-src 'nonce-{nonce}' 'self' https://*.paypal.com ...");
 
-    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-    context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
-    context.Response.Headers.Add("X-Xss-Protection", "1; mode=block");
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
+    context.Response.Headers.Append("X-Xss-Protection", "1; mode=block");
 
     await next();
 });
