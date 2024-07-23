@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "dDtL+LaS6HI6BD1SiUTh7GVoX/sZfsWrHKWzCor9VRuBBbHmuGd2zM2uohebvAZV4pqRcXQMdTwzSkBjA8YdwA==",
+  "dgSpecHash": "NxjTbAQlpd1gfCNmEyfd/PBvozBZQxudHgq6JquKn06bz08xi00mwvQ/Yqxg8/dReuvhJ5T8KoIX1ryv7jBo8A==",
   "success": true,
   "projectFilePath": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\back-end.csproj",
   "expectedPackageFiles": [
@@ -141,6 +141,7 @@
     "C:\\Users\\phank\\.nuget\\packages\\microsoft.netcore.targets\\1.1.3\\microsoft.netcore.targets.1.1.3.nupkg.sha512",
     "C:\\Users\\phank\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\phank\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
+    "C:\\Users\\phank\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.19.6\\microsoft.visualstudio.azure.containers.tools.targets.1.19.6.nupkg.sha512",
     "C:\\Users\\phank\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration\\8.0.2\\microsoft.visualstudio.web.codegeneration.8.0.2.nupkg.sha512",
     "C:\\Users\\phank\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration.core\\8.0.2\\microsoft.visualstudio.web.codegeneration.core.8.0.2.nupkg.sha512",
     "C:\\Users\\phank\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration.design\\8.0.2\\microsoft.visualstudio.web.codegeneration.design.8.0.2.nupkg.sha512",
