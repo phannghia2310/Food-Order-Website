@@ -181,7 +181,7 @@ app.UseEndpoints(endpoints =>
 {
     _ = endpoints.MapHub<ChatHub>("/chatHub");
     _ = endpoints.MapHealthChecks("/health");
-
+    _ = endpoints.MapControllers();
 });
 
 app.Use(async (context, next) =>
