@@ -13,7 +13,6 @@ import Order from "@/types/Order";
 import { EyeFilledIcon } from "@/icons/EyeFilledIcon";
 import { TrashIcon } from "@/icons/TrashIcon";
 import { CheckIcon } from "@/icons/CheckIcon";
-import { getReadableDateTime } from "@/libs/datetime";
 import OrderStatusCell from "./StatusCell";
 import { changeStatus } from "@/app/api/orders/route";
 
@@ -42,6 +41,10 @@ const OrdersTable = ({ orders = [], isAdmin }: OrdersTableProps) => {
     } catch (error) {
       console.error("Failed to change order status:", error);
     }
+  };
+
+  function getReadableDateTime(dateString: string) {
+    return dateString.replace("T", " ").substring(0, 16);
   };
 
   return (
