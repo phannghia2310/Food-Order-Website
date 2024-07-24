@@ -37,7 +37,8 @@ var envVars = new Dictionary<string, string>
     { "VNPAY_LOCALE", "VnPayOptions:Locale" },
     { "VNPAY_PAYMENT_BACK_RETURN_URL", "VnPayOptions:PaymentBackReturnUrl" },
     { "GOOGLE_CLIENT_ID", "GoogleKeys:ClientId" },
-    { "GOOGLE_CLIENT_SECRET", "GoogleKeys:ClientSecret" }
+    { "GOOGLE_CLIENT_SECRET", "GoogleKeys:ClientSecret" },
+    { "AZURE_SIGNALR_CONNECTION_STRING", "Azure:SignalR:ConnectionString" },
 };
 
 foreach (var envVar in envVars)
@@ -143,7 +144,7 @@ builder.Services.AddSwaggerGen(options =>
     var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
     options.IncludeXmlComments(xmlPath);
 });
-builder.Services.AddSignalR();
+builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration["Azure:SignalR:ConnectionString"]);
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddHealthChecks();
@@ -200,11 +201,11 @@ app.Use(async (context, next) =>
 app.MapControllerRoute(
     name: "MyArea",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}")
-    .RequireCors("AllowSpecificOrigin");
+    .RequireCors("AllowAllOrigins");
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
-    .RequireCors("CustomerPolicy");
+    .RequireCors("AllowAllOrigins");
 
 app.Run();

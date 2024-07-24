@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://localhost:7133";
+const API_URL = "https://app-food-order.azurewebsites.net";
 
 export const codPayment = (orderModel: any) => {
   return axios.post(`${API_URL}/customer/cart/cod`, orderModel, {

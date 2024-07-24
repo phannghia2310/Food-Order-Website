@@ -18,13 +18,13 @@ jobs:
       with:
         dotnet-version: '8.0.x' # Adjust this to the .NET version you're using
 
-    - name: Install dependencies
+    - name: Install dependencies for back-end
       run: dotnet restore back-end/back-end.csproj # Adjust the path to your .csproj or .sln file
 
-    - name: Build
+    - name: Build back-end
       run: dotnet build back-end/back-end.csproj --configuration Release --no-restore # Adjust the path to your .csproj or .sln file
 
-    - name: Publish
+    - name: Publish back-end
       run: dotnet publish back-end/back-end.csproj -c Release -o ${{ github.workspace }}/publish --no-build # Adjust the path to your .csproj or .sln file
 
     - name: Install dotnet-ef tool
@@ -54,6 +54,7 @@ jobs:
         VNPAY_PAYMENT_BACK_RETURN_URL: ${{ secrets.VNPAY_PAYMENT_BACK_RETURN_URL }}
         GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+	AZURE_SIGNALR_CONNECTION_STRING: ${{ secrets.AZURE_SIGNALR_CONNECTION_STRING }}
 
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://localhost:7133";
+const API_URL = "https://app-food-order.azurewebsites.net";
 
 export const getAllCategory = () => {
     return axios.get(`${API_URL}/admin/category`);

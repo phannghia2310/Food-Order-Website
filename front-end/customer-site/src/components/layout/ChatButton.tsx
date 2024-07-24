@@ -6,6 +6,7 @@ import { CloseIcon } from "@/icons/CloseIcon";
 import { SendIcon } from "@/icons/SendIcon";
 import * as signalR from "@microsoft/signalr";
 import { SaveMessage } from "@/app/api/chat/route";
+import jwt from "jsonwebtoken";
 
 const ChatButton = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -38,12 +39,23 @@ const ChatButton = () => {
 
   useEffect(() => {
     const startConnection = async () => {
+      const accessTokenFactory = () => {
+        const secret = "KjNhBHePnuzAIC67D8AlSBrvHHPlV2og4ymSY5jwtQ8=";
+        const payload = {
+          aud: "https://food-order-chat.service.signalr.net",
+          exp: Math.floor(Date.now() / 1000) + 60 * 60,
+          sub: userData.userId.toString(),
+        };
+
+        return jwt.sign(payload, secret);
+      };
+
       const newConnection = new signalR.HubConnectionBuilder()
-        .withUrl("https://localhost:7133/chatHub", {
-          transport: signalR.HttpTransportType.WebSockets,
-          withCredentials: false,
-          accessTokenFactory: () => userData.userId.toString(),
+        .withUrl("https://food-order-chat.service.signalr.net/client/?hub=chatHub", {
+          transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.ServerSentEvents | signalR.HttpTransportType.LongPolling,
+          accessTokenFactory,
         })
+        .configureLogging(signalR.LogLevel.Information)
         .withAutomaticReconnect()
         .build();
 
