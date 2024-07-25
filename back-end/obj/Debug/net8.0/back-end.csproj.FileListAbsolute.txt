@@ -272,3 +272,6 @@ C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back
 C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\Microsoft.Azure.SignalR.dll
 C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\Microsoft.Azure.SignalR.Protocols.dll
 C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\System.ClientModel.dll
+C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\Azure.Storage.Blobs.dll
+C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\Azure.Storage.Common.dll
+C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\System.IO.Hashing.dll

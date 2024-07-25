@@ -1,8 +1,7 @@
-﻿using back_end.Areas.Admin.Models;
+﻿using Azure.Storage.Blobs;
+using back_end.Areas.Admin.Models;
 using back_end.Data;
-using back_end.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace back_end.Areas.Admin.Controllers
 {
@@ -13,13 +12,16 @@ namespace back_end.Areas.Admin.Controllers
     {
         private readonly FoodOrderContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly UploadPathsOptions _upload;
+        private readonly BlobServiceClient _service;
+        private readonly IConfiguration _configuration;
 
-        public ProductController(FoodOrderContext context, IWebHostEnvironment hostingEnvironment, IOptions<UploadPathsOptions> upload)
+        public ProductController(FoodOrderContext context, IWebHostEnvironment hostingEnvironment,
+            BlobServiceClient service, IConfiguration configuration)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
-            _upload = upload.Value;
+            _service = service;
+            _configuration = configuration;
         }
 
         [HttpGet(Name = "GetAllProduct")] 
@@ -120,51 +122,27 @@ namespace back_end.Areas.Admin.Controllers
                 return BadRequest("Image file is not selected");
             }
 
-            // Define both upload paths
-            var adminUploadFolder = Path.Combine(Directory.GetCurrentDirectory(), _upload.AdminUploadFolder!);
-            //var customerUploadFolder = Path.Combine(Directory.GetCurrentDirectory(), _upload.CustomerUploadFolder!);
-
-            // Ensure both directories exist
-            if (!Directory.Exists(adminUploadFolder))
+            try
             {
-                Directory.CreateDirectory(adminUploadFolder);
-            }
-            //if (!Directory.Exists(customerUploadFolder))
-            //{
-            //    Directory.CreateDirectory(customerUploadFolder);
-            //}
+                var containerName = _configuration["AzureBlobStorage:ContainerName"];
+                var containerClient = _service.GetBlobContainerClient(containerName);
 
-            // Generate file name and paths
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.Image.FileName);
-            var adminFilePath = Path.Combine(adminUploadFolder, fileName);
-            //var customerFilePath = Path.Combine(customerUploadFolder, fileName);
+                await containerClient.CreateIfNotExistsAsync();
 
-            // Check and delete existing files with the same name in both directories
-            var existingAdminFilePath = Directory.GetFiles(adminUploadFolder, fileName).FirstOrDefault();
-            //var existingCustomerFilePath = Directory.GetFiles(customerUploadFolder, fileName).FirstOrDefault();
-            if (existingAdminFilePath != null)
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.Image.FileName);
+                var blobClient = containerClient.GetBlobClient(fileName);
+
+                using (var stream = image.Image.OpenReadStream())
+                {
+                    await blobClient.UploadAsync(stream, true);
+                }
+
+                return Ok(new { imagePath = fileName });
+            } 
+            catch (Exception ex)
             {
-                System.IO.File.Delete(existingAdminFilePath);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-            //if (existingCustomerFilePath != null)
-            //{
-            //    System.IO.File.Delete(existingCustomerFilePath);
-            //}
-
-            // Save the file to both directories
-            using (var stream = new FileStream(adminFilePath, FileMode.Create))
-            {
-                await image.Image.CopyToAsync(stream);
-            }
-            //using (var stream = new FileStream(customerFilePath, FileMode.Create))
-            //{
-            //    await image.Image.CopyToAsync(stream);
-            //}
-
-            // Return the relative path (assuming it's the same for both)
-
-            var relativePath = Path.Combine(fileName).Replace("\\", "/");
-            return Ok(new { imagePath = relativePath });
         }
     }
 }

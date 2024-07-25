@@ -62,6 +62,11 @@ export function Product() {
         return category ? category.categoryName : ""; 
     };
 
+    const getBlobUrl = (imageUrl) => {
+      const containerUrl = import.meta.env.VITE_AZURE_BLOB_URL;
+      return imageUrl ? `${containerUrl}/${imageUrl}` : DefaultProduct;
+  };
+
     return (
         <div className="mt-12 mb-8 flex flex-col gap-12">
           <Card>
@@ -105,7 +110,7 @@ export function Product() {
                         <tr key={product.productId}>
                           <td className={className}>
                             <Avatar
-                              src={product.imageUrl ? `/img/product/${product.imageUrl}` : DefaultProduct}
+                              src={product.imageUrl ? getBlobUrl(product.imageUrl) : DefaultProduct}
                               alt="product-image"
                               size="xl"
                               variant="rounded"

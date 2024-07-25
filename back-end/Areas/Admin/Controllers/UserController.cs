@@ -1,4 +1,5 @@
-﻿using back_end.Areas.Admin.Models;
+﻿using Azure.Storage.Blobs;
+using back_end.Areas.Admin.Models;
 using back_end.Data;
 using back_end.Helpers;
 using Microsoft.AspNetCore.Authentication;
@@ -18,11 +19,15 @@ namespace back_end.Areas.Admin.Controllers
     {
         private readonly FoodOrderContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IConfiguration _configuration;
+        private readonly BlobServiceClient _service;
 
-        public UserController(FoodOrderContext context, IWebHostEnvironment hostingEnvironment)
+        public UserController(FoodOrderContext context, IWebHostEnvironment hostingEnvironment, IConfiguration configuration, BlobServiceClient service)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
+            _configuration = configuration;
+            _service = service;
         }
 
         [HttpGet(Name = "GetAllUser")]
@@ -125,35 +130,32 @@ namespace back_end.Areas.Admin.Controllers
         [HttpPost("upload-image")]
         public async Task<IActionResult> UploadImage([FromForm] ImageUploadModel image)
         {
-            if (image.Image == null || image.Image?.Length == 0)
+            if (image.Image == null || image.Image.Length == 0)
             {
                 return BadRequest("Image file is not selected");
             }
 
-            var uploadFolder = Path.Combine(@"C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\front-end\admin-site\public\img", "user");
-
-            if (!Directory.Exists(uploadFolder))
+            try
             {
-                Directory.CreateDirectory(uploadFolder);
+                var containerName = _configuration["AzureBlobStorage:ContainerName"];
+                var containerClient = _service.GetBlobContainerClient(containerName);
+
+                await containerClient.CreateIfNotExistsAsync();
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.Image.FileName);
+                var blobClient = containerClient.GetBlobClient(fileName);
+
+                using (var stream = image.Image.OpenReadStream())
+                {
+                    await blobClient.UploadAsync(stream, true);
+                }
+
+                return Ok(new { imagePath = fileName });
             }
-
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.Image?.FileName);
-            var filePath = Path.Combine(uploadFolder, fileName);
-
-            var existingFilePath = Directory.GetFiles(uploadFolder, fileName).FirstOrDefault();
-            if (existingFilePath != null)
+            catch (Exception ex)
             {
-                // File with same name exists, delete it
-                System.IO.File.Delete(existingFilePath);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await image.Image!.CopyToAsync(stream);
-            }
-
-            var relativePath = Path.Combine(fileName).Replace("\\", "/");
-            return Ok(new { imagePath = relativePath });
         }
 
         [HttpPost("login", Name = "Login")]

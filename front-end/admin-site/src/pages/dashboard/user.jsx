@@ -55,6 +55,11 @@ export function User() {
       setIsDeleteUserOpen(false);
     };
 
+    const getBlobUrl = (imageUrl) => {
+      const containerUrl = import.meta.env.VITE_AZURE_BLOB_URL;
+      return imageUrl ? `${containerUrl}/${imageUrl}` : DefaultProduct;
+  };
+
     return (
         <div className="mt-12 mb-8 flex flex-col gap-12">
           <Card>
@@ -98,7 +103,7 @@ export function User() {
                         <tr key={user.userId}>
                           <td className={className}>
                             <Avatar
-                              src={user.imageUrl ? `/img/user/${user.imageUrl}` : UserImage}
+                              src={user.imageUrl ? getBlobUrl(user.imageUrl) : UserImage}
                               alt="user-image"
                               size="xl"
                               variant="rounded"

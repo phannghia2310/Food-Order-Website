@@ -10,6 +10,7 @@ using back_end.Helpers;
 using back_end.Hubs;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Azure.Storage.Blobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,8 @@ var envVars = new Dictionary<string, string>
     { "GOOGLE_CLIENT_ID", "GoogleKeys:ClientId" },
     { "GOOGLE_CLIENT_SECRET", "GoogleKeys:ClientSecret" },
     { "AZURE_SIGNALR_CONNECTION_STRING", "Azure:SignalR:ConnectionString" },
+    { "AZURE_BLOB_STORAGE_CONNECTION_STRING", "AzureBlobStorage:ConnectionString" },
+    { "AZURE_BLOB_STORAGE_CONTAINER_NAME", "AzureBlobStorage:ContainerName"}
 };
 
 foreach (var envVar in envVars)
@@ -67,10 +70,11 @@ builder.Services.AddSingleton<IVnPayService, VnPayService>();
 builder.Services.AddSingleton<IAuthenticationSchemeProvider, CustomerAutheticationSchemeProvider>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton(x => new PaypalClient(
-    builder.Configuration["PaypalOptions:AppId"],
-    builder.Configuration["PaypalOptions:AppSecret"],
-    builder.Configuration["PaypalOptions:Mode"]
+    clientId: builder.Configuration["PaypalOptions:AppId"]!,
+    clientSecret: builder.Configuration["PaypalOptions:AppSecret"]!,
+    mode: builder.Configuration["PaypalOptions:Mode"]!
 ));
+builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration["AzureBlobStorage:ConnectionString"]));
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddAuthentication(options =>
 {
@@ -152,8 +156,6 @@ builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration["Azure:Signa
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddHealthChecks();
-
-builder.Services.Configure<UploadPathsOptions>(builder.Configuration.GetSection("UploadPaths"));
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();  // Log to console
