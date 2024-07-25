@@ -4,7 +4,7 @@
     {
         public class WeeklyOrdersData
         {
-            public string? Day { get; set; }
+            public DayOfWeek? Day { get; set; }
             public int Orders { get; set; }
         }
 

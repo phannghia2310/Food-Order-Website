@@ -57,7 +57,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<FoodOrderContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("FoodOrder"));
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:FoodOrder"]);
 });
 builder.Services.AddSession(options =>
 {

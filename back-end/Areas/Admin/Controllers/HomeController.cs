@@ -207,15 +207,20 @@ namespace back_end.Areas.Admin.Controllers
         [HttpGet("weekly-orders")]
         public IActionResult GetWeeklyOrders()
         {
+            DateTime today = DateTime.Today;
+
+            int daysToSubtract = (today.DayOfWeek == DayOfWeek.Sunday) ? 6 : (int)today.DayOfWeek - 1;
+            DateTime startOfWeek = today.AddDays(-daysToSubtract);
+
             var orders = _context.Orders
-                .Where(o => o.DeliveryDate >= DateTime.Now.AddDays(-7) && o.Status == 3)
+                .Where(o => o.DeliveryDate >= startOfWeek && o.Status == 3)
                 .ToList();
 
             var groupedOrders = orders
                 .GroupBy(o => o.DeliveryDate!.Value.DayOfWeek)
                 .Select(g => new WeeklyOrdersData
                 {
-                    Day = g.Key.ToString().Substring(0, 1),
+                    DayOfWeek = g.Key,
                     Orders = g.Count()
                 })
                 .ToList();
@@ -223,13 +228,27 @@ namespace back_end.Areas.Admin.Controllers
             var allDays = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>()
                 .Select(d => new WeeklyOrdersData
                 {
-                    Day = d.ToString().Substring(0, 1),
-                    Orders = groupedOrders.FirstOrDefault(o => o.Day == d.ToString().Substring(0, 1))?.Orders ?? 0
+                    DayOfWeek = d,
+                    Orders = groupedOrders.FirstOrDefault(o => o.DayOfWeek == d)?.Orders ?? 0
                 })
+                .OrderBy(d => (int)d.DayOfWeek) // Sắp xếp theo thứ tự ngày trong tuần
                 .ToList();
 
-            return Ok(allDays);
+            var result = allDays.Select(d => new
+            {
+                Day = d.DayOfWeek.ToString().Substring(0, 3), // Lấy 3 ký tự đầu của tên thứ
+                d.Orders
+            });
+
+            return Ok(result);
         }
+
+        public class WeeklyOrdersData
+        {
+            public DayOfWeek DayOfWeek { get; set; }
+            public int Orders { get; set; }
+        }
+
 
         [HttpGet("top-selling-items")]
         public IActionResult GetTopSellingItems()

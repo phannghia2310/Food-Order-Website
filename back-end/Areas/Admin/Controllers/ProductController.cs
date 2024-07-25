@@ -2,6 +2,7 @@
 using back_end.Areas.Admin.Models;
 using back_end.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace back_end.Areas.Admin.Controllers
 {
@@ -46,13 +47,13 @@ namespace back_end.Areas.Admin.Controllers
         [HttpPost(Name = "CreateProduct")]
         public async Task<IActionResult> Post([FromBody] ProductModel product) 
         {
-            var existingCategory = _context.Categories.FindAsync(product.CategoryId);
+            var existingCategory = await _context.Categories.FindAsync(product.CategoryId);
             if(existingCategory == null)
             {
                 return BadRequest("Invalid CategoryID");
             } 
 
-            var existingProduct = _context.Products.FirstOrDefault(p => p.ProductName == product.ProductName);
+            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.ProductName == product.ProductName);
             if(existingProduct != null)
             {
                 return Conflict("Product name is already use");
@@ -73,7 +74,7 @@ namespace back_end.Areas.Admin.Controllers
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
 
-            return Ok(newProduct);
+            return Ok();
         }
 
         [HttpPut("{id}", Name = "UpdateProduct")]
