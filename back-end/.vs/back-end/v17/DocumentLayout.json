@@ -7,20 +7,12 @@
       "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:areas\\admin\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\areas\\admin\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:areas\\admin\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\.env||{8B382828-6202-11D1-8870-0000F87579D2}",
@@ -38,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -55,6 +47,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAJkAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-25T07:48:24.926Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -62,8 +67,7 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AQIAACEAAAAAAAAAAAAAACoAAAAjAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-07-25T04:20:36.892Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-25T04:20:36.892Z"
             },
             {
               "$type": "Document",
@@ -73,14 +77,14 @@
               "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\ProductController.cs",
               "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Areas\\Admin\\Controllers\\ProductController.cs",
               "RelativeToolTip": "Areas\\Admin\\Controllers\\ProductController.cs",
-              "ViewState": "AQIAAIMAAAAAAAAAAAAAAKIAAAAAAAAA",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAABUAAAAiAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-25T04:15:05.363Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": ".env",
               "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\.env",
               "RelativeDocumentMoniker": ".env",
@@ -88,12 +92,11 @@
               "RelativeToolTip": ".env",
               "ViewState": "AQIAAAwAAAAAAAAAAAAAAAcAAAA1AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-07-25T03:21:32.54Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-25T03:21:32.54Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "Services\\UserService.cs",
@@ -101,47 +104,7 @@
               "RelativeToolTip": "Services\\UserService.cs",
               "ViewState": "AQIAAAkAAAAAAAAAAAAAADgAAAA3AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-25T03:07:17.252Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AQIAAIEAAAAAAAAAAAAAAD0AAAAsAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-25T03:06:53.546Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAJIAAAAAAAAAAADwv5wAAABgAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-25T02:56:49.846Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UserController.cs",
-              "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Areas\\Admin\\Controllers\\UserController.cs",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\UserController.cs",
-              "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Areas\\Admin\\Controllers\\UserController.cs",
-              "RelativeToolTip": "Areas\\Admin\\Controllers\\UserController.cs",
-              "ViewState": "AQIAAJQAAAAAAAAAAAAAAJwAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-25T01:46:20.769Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-25T03:07:17.252Z"
             }
           ]
         }

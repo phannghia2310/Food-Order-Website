@@ -1,4 +1,4 @@
-﻿namespace back_end.Areas.Admin.Models
+﻿namespace back_end.Services
 {
     public class UploadPathsOptions
     {

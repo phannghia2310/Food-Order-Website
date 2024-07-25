@@ -10,7 +10,6 @@ using back_end.Helpers;
 using back_end.Hubs;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using back_end.Areas.Admin.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

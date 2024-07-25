@@ -1,6 +1,8 @@
 ﻿using back_end.Areas.Admin.Models;
 using back_end.Data;
+using back_end.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace back_end.Areas.Admin.Controllers
 {
@@ -13,11 +15,11 @@ namespace back_end.Areas.Admin.Controllers
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly UploadPathsOptions _upload;
 
-        public ProductController(FoodOrderContext context, IWebHostEnvironment hostingEnvironment, UploadPathsOptions upload)
+        public ProductController(FoodOrderContext context, IWebHostEnvironment hostingEnvironment, IOptions<UploadPathsOptions> upload)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
-            _upload = upload;
+            _upload = upload.Value;
         }
 
         [HttpGet(Name = "GetAllProduct")] 
