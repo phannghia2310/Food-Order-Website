@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://app-food-order.azurewebsites.net";
+console.log(import.meta.env.VITE_API_URL);
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const getContacts = () => {
     return axios.get(`${API_URL}/admin/chat/contact-list`);

@@ -26,7 +26,7 @@ export function SignIn() {
         console.log(response.data);
       }
     } catch (err) {
-      console.error(err.message);
+      console.error(err.response);
     }
   };
 

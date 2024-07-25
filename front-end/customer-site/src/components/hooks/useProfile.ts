@@ -11,7 +11,7 @@ export const useProfile = () => {
       setData(JSON.parse(customerData));
       setLoading(false);
     }
-  }, [])
+  }, []);
 
-  return { data, loading }
-}
+  return { data, loading };
+};

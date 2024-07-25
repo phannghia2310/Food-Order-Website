@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://app-food-order.azurewebsites.net";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const getAllUser = () => {
     return axios.get(`${API_URL}/admin/user`);
@@ -33,6 +33,7 @@ export const uploadImage = (selectedFile) => {
 };
 
 export const userLogin = (formData) => {
+    console.log(formData);
     return axios.post(`${API_URL}/admin/user/login`, formData, {
         headers: { 
             'Content-Type': 'application/json', 

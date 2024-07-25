@@ -52,7 +52,7 @@ export function Chat() {
     const setupConnection = async () => {
       if (selectedContact) {
         const newConnection = new HubConnectionBuilder()
-          .withUrl("https://localhost:7133/chatHub", {
+          .withUrl("https://app-food-order.azurewebsites.net/chatHub", {
             transport: HttpTransportType.WebSockets,
             withCredentials: false,
             accessTokenFactory: () => selectedContact?.id || "",

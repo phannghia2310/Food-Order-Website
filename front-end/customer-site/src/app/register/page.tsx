@@ -6,7 +6,7 @@ import EmailInput from "@/components/common/form/EmailInput";
 import PasswordInput from "@/components/common/form/PasswordInput";
 import NameInput from "@/components/common/form/NameInput";
 import { useRouter } from "next/navigation";
-import { register, signinWithGoogle } from "../api/users/route";
+import { registerUser, signinWithGoogle } from "../api/users/api";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 const RegisterPage = () => {
@@ -24,13 +24,12 @@ const RegisterPage = () => {
     setError("");
 
     try {
-      const response = await register({ name, email, password });
-  
+      const response = await registerUser(name, email, password);
       if (response.status === 200) {
         setUserCreated(true);
       }
     } catch (error: any) {
-      if(error.response.status != null) {
+      if(error.response != null) {
         setError(error.response.data);
       }
       else {

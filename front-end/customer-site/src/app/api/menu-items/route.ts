@@ -1,11 +1,21 @@
-import axios from "axios";
+import { NextRequest, NextResponse } from 'next/server';
+import axios from 'axios';
 
 const API_URL = "https://app-food-order.azurewebsites.net";
 
-export const getAllItem = () => {
-  return axios.get(`${API_URL}/customer/MenuItem`);
-};
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const id = url.searchParams.get('id');
 
-export const getItemByCategory = (id: any) => {
-  return axios.get(`${API_URL}/customer/MenuItem/${id}`);
-};
+  try {
+    if (id === null) {
+      const response = await axios.get(`${API_URL}/customer/MenuItem`);
+      return NextResponse.json(response.data);
+    } else {
+      const response = await axios.get(`${API_URL}/customer/MenuItem/${id}`);
+      return NextResponse.json(response.data);
+    }
+  } catch (error: any) {
+    return NextResponse.json({ error: 'Failed to fetch menu items', details: error.message }, { status: 500 });
+  }
+}

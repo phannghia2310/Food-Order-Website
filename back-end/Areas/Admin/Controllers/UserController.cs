@@ -176,7 +176,7 @@ namespace back_end.Areas.Admin.Controllers
                     {
                         var claims = new List<Claim>
                         {
-                            new Claim(ClaimTypes.Name, user.Username),
+                            new Claim(ClaimTypes.Name, user.Username!),
                             new Claim(MySetting.CLAIM_ADMINID, user.UserId.ToString()),
                             new Claim(ClaimTypes.Role, "Admin"),
                         };

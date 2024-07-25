@@ -11,11 +11,13 @@ namespace back_end.Areas.Admin.Controllers
     {
         private readonly FoodOrderContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly UploadPathsOptions _upload;
 
-        public ProductController(FoodOrderContext context, IWebHostEnvironment hostingEnvironment)
+        public ProductController(FoodOrderContext context, IWebHostEnvironment hostingEnvironment, UploadPathsOptions upload)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
+            _upload = upload;
         }
 
         [HttpGet(Name = "GetAllProduct")] 
@@ -117,47 +119,48 @@ namespace back_end.Areas.Admin.Controllers
             }
 
             // Define both upload paths
-            var adminUploadFolder = Path.Combine(@"C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\front-end\admin-site\public\img", "product");
-            var customerUploadFolder = Path.Combine(@"C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\front-end\customer-site\public\assets", "product");
+            var adminUploadFolder = Path.Combine(Directory.GetCurrentDirectory(), _upload.AdminUploadFolder!);
+            //var customerUploadFolder = Path.Combine(Directory.GetCurrentDirectory(), _upload.CustomerUploadFolder!);
 
             // Ensure both directories exist
             if (!Directory.Exists(adminUploadFolder))
             {
                 Directory.CreateDirectory(adminUploadFolder);
             }
-            if (!Directory.Exists(customerUploadFolder))
-            {
-                Directory.CreateDirectory(customerUploadFolder);
-            }
+            //if (!Directory.Exists(customerUploadFolder))
+            //{
+            //    Directory.CreateDirectory(customerUploadFolder);
+            //}
 
             // Generate file name and paths
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.Image.FileName);
             var adminFilePath = Path.Combine(adminUploadFolder, fileName);
-            var customerFilePath = Path.Combine(customerUploadFolder, fileName);
+            //var customerFilePath = Path.Combine(customerUploadFolder, fileName);
 
             // Check and delete existing files with the same name in both directories
             var existingAdminFilePath = Directory.GetFiles(adminUploadFolder, fileName).FirstOrDefault();
-            var existingCustomerFilePath = Directory.GetFiles(customerUploadFolder, fileName).FirstOrDefault();
+            //var existingCustomerFilePath = Directory.GetFiles(customerUploadFolder, fileName).FirstOrDefault();
             if (existingAdminFilePath != null)
             {
                 System.IO.File.Delete(existingAdminFilePath);
             }
-            if (existingCustomerFilePath != null)
-            {
-                System.IO.File.Delete(existingCustomerFilePath);
-            }
+            //if (existingCustomerFilePath != null)
+            //{
+            //    System.IO.File.Delete(existingCustomerFilePath);
+            //}
 
             // Save the file to both directories
             using (var stream = new FileStream(adminFilePath, FileMode.Create))
             {
                 await image.Image.CopyToAsync(stream);
             }
-            using (var stream = new FileStream(customerFilePath, FileMode.Create))
-            {
-                await image.Image.CopyToAsync(stream);
-            }
+            //using (var stream = new FileStream(customerFilePath, FileMode.Create))
+            //{
+            //    await image.Image.CopyToAsync(stream);
+            //}
 
             // Return the relative path (assuming it's the same for both)
+
             var relativePath = Path.Combine(fileName).Replace("\\", "/");
             return Ok(new { imagePath = relativePath });
         }

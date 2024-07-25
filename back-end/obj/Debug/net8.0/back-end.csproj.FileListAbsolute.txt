@@ -268,3 +268,7 @@ C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back
 C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\Microsoft.AspNetCore.JsonPatch.dll
 C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
+C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\Microsoft.Azure.SignalR.Common.dll
+C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\Microsoft.Azure.SignalR.dll
+C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\Microsoft.Azure.SignalR.Protocols.dll
+C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\back-end\bin\Debug\net8.0\System.ClientModel.dll

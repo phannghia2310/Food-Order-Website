@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import React, { FormEvent, useEffect } from "react";
 import toast from "react-hot-toast";
 import Loader from "@/components/common/Loader";
-import { update } from "@/app/api/users/route";
+import { updateUser } from "../api/users/api";
 
 const ProfilePage = () => {
   const { data: profileData, loading } = useProfile();
@@ -30,7 +30,7 @@ const ProfilePage = () => {
     
     const savingPromise = new Promise(async (resolve, reject) => {
       try {
-        const response = await update(profileData?.userId, data);
+        const response = await updateUser(profileData?.userId, data);
         console.log(response.data);
         if (response.status === 200) {
           resolve(response);

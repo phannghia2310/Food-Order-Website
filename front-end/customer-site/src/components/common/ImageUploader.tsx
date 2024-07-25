@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 import toast from "react-hot-toast";
-import { upload } from "@/app/api/users/route";
+import { uploadFile } from "@/app/api/users/api";
 
 interface ImageUploaderProps {
   setImageLink: (imageLink: string) => void;
@@ -14,12 +14,15 @@ const ImageUploader = ({ setImageLink, children }: ImageUploaderProps) => {
     const files = event.target.files;
     if (files && files.length === 1) {
       const formData = new FormData();
-      formData.set("file", files[0]);
+      formData.append("file", files[0]);
 
       const uploadPromise = new Promise<string | undefined>(
         async (resolve, reject) => {
           try {
-            const response = await upload(formData);
+            console.log("File to upload:", files[0]);
+            console.log("FormData object:", formData.get('file'));
+            
+            const response = await uploadFile(formData);
             if (response.status === 200) {
               console.log(response.data.imagePath);
               const link = response.data.imagePath;

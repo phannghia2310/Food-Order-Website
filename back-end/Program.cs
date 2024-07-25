@@ -10,6 +10,7 @@ using back_end.Helpers;
 using back_end.Hubs;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using back_end.Areas.Admin.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,10 +52,6 @@ foreach (var envVar in envVars)
 }
 
 builder.Services.AddControllers();
-    //.AddNewtonsoftJson(options =>
-    //{
-    //    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-    //});
 
 builder.Services.AddDbContext<FoodOrderContext>(options =>
 {
@@ -116,6 +113,14 @@ builder.Services.AddAuthentication(options =>
                 return Task.CompletedTask;
             }
         };
+    })
+    .AddCookie("CustomerAuth", options =>
+    {
+        options.LoginPath = "/customer/auth/signin";
+    })
+    .AddCookie("AdminAuth", options =>
+    {
+        options.LoginPath = "/admin/user/login";
     });
 builder.Services.AddScoped<FoodOrderContext>();
 builder.Services.AddScoped<UserService>();
@@ -148,6 +153,8 @@ builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration["Azure:Signa
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddHealthChecks();
+
+builder.Services.Configure<UploadPathsOptions>(builder.Configuration.GetSection("UploadPaths"));
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();  // Log to console

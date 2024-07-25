@@ -54,7 +54,7 @@ export function DashboardNavbar() {
   useEffect(() => {
     const setupConnection = async () => {
       const newConnection = new HubConnectionBuilder()
-        .withUrl("https://localhost:7133/chatHub", {
+        .withUrl("https://app-food-order.azurewebsites.net/chatHub", {
           transport: HttpTransportType.WebSockets,
           withCredentials: false,
         })

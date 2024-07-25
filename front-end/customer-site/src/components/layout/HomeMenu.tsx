@@ -4,7 +4,7 @@ import HomeMenuItemCard from "./HomeMenuItemCard";
 import MenuItem from "@/types/MenuItem";
 import SectionHeader from "./SectionHeader";
 import { SectionProps } from "@/types/SectionProps";
-import { getItemByCategory } from "@/app/api/menu-items/route";
+import { getItemByCategory } from "@/app/api/menu-items/api";
 
 const HomeMenu = ({ className }: SectionProps) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);

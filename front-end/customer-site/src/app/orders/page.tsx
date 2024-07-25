@@ -6,7 +6,7 @@ import Order from "@/types/Order";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import Loader from "@/components/common/Loader";
-import { getListCart } from "../api/orders/route";
+import { getListCart } from "../api/orders/api";
 
 const OrdersPage = () => {
   const { data: profileData, loading } = useProfile();

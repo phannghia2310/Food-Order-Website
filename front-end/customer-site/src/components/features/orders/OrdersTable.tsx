@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -14,7 +14,8 @@ import { EyeFilledIcon } from "@/icons/EyeFilledIcon";
 import { TrashIcon } from "@/icons/TrashIcon";
 import { CheckIcon } from "@/icons/CheckIcon";
 import OrderStatusCell from "./StatusCell";
-import { changeStatus } from "@/app/api/orders/route";
+import { changeStatus } from "@/app/api/orders/api";
+import toast from "react-hot-toast";
 
 interface OrdersTableProps {
   orders?: Order[];
@@ -28,20 +29,22 @@ const OrdersTable = ({ orders = [], isAdmin }: OrdersTableProps) => {
     setOrderList(orders);
   }, [orders]);
 
-  const changStatusOrder = async (orderId: any) => {
+  const changStatusOrder = useCallback(async (orderId: any) => {
     try {
-      const response = await  changeStatus(orderId);
+      const response = await changeStatus(orderId);
+      console.log(response);
       const updatedOrder = response.data;
       setOrderList((prevOrders) =>
         prevOrders.map((order) =>
           order.orderId === orderId ? updatedOrder : order
         )
       );
-      window.location.assign("/orders");
+      toast.success("Success to chang order status");
     } catch (error) {
+      toast.error("Failed to change order status");
       console.error("Failed to change order status:", error);
     }
-  };
+  }, []);
 
   function getReadableDateTime(dateString: string) {
     return dateString.replace("T", " ").substring(0, 16);
@@ -99,7 +102,7 @@ const OrdersTable = ({ orders = [], isAdmin }: OrdersTableProps) => {
                       <EyeFilledIcon className={"w-6"} />
                     </Link>
                   </Tooltip>
-                  {order.status === 0 && (
+                  {(order.status === 0 && order.payment === 'COD') || (order.status === 1 && order.payment === 'PAYPAL') && (
                     <Tooltip content="Cancel">
                       <button
                         onClick={() => changStatusOrder(order.orderId)}

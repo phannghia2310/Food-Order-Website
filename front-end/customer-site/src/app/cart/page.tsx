@@ -8,10 +8,7 @@ import { ChevronLeftIcon } from "@/icons/ChevronLeftIcon";
 import { Button, Link } from "@nextui-org/react";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  codPayment,
-  createPayPalOrder,
-} from "../api/checkout/route";
+import { codPayment, createPayPalOrder } from "../api/checkout/api";
 
 interface ProfileInfo {
   name: string;

@@ -6,8 +6,8 @@ import SectionHeader from "@/components/layout/SectionHeader";
 import Category from "@/types/Category";
 import MenuItem from "@/types/MenuItem";
 import React, { useEffect, useState } from "react";
-import { getAllCategory } from "../api/categories/route";
-import { getAllItem } from "../api/menu-items/route";
+import { getAllCategories } from "../api/categories/api";
+import { getAllItems } from "../api/menu-items/api";
 
 const MenuPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -19,14 +19,13 @@ const MenuPage = () => {
     category.categoryName.includes(tag)
   );
 
-
   useEffect(() => {
-    getAllCategory().then((res) => {
+    getAllCategories().then((res) => {
       setCategories(res.data); 
       setTag(res.data[0].categoryName);
     });
 
-    getAllItem().then((res) => {
+    getAllItems().then((res) => {
       setMenuItems(res.data);
     });
     setLoading(false);

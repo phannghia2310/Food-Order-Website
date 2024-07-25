@@ -4,7 +4,7 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { FormEvent, useState } from "react";
 import EmailInput from "@/components/common/form/EmailInput";
 import PasswordInput from "@/components/common/form/PasswordInput";
-import { signin, signinWithGoogle } from "../api/users/route";
+import { signinUser, signinWithGoogle } from "../api/users/api";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -18,7 +18,7 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const response = await signin({ email, password });
+      const response = await signinUser(email, password);
       if (response.status === 200) {
         const { token, user } = response.data;
         localStorage.setItem("token", token);
@@ -41,6 +41,7 @@ const LoginPage = () => {
 
     try {
       const idToken = response.credential;
+      console.log(idToken);
       const apiResponse = await signinWithGoogle(idToken);
       console.log(apiResponse);
       if (apiResponse.status === 200) {
