@@ -44,8 +44,14 @@ namespace back_end.Areas.Admin.Controllers
         }
 
         [HttpPost(Name = "CreateProduct")]
-        public ActionResult<Product> Post([FromBody] ProductModel product) 
+        public async Task<IActionResult> Post([FromBody] ProductModel product) 
         {
+            var existingCategory = _context.Categories.FindAsync(product.CategoryId);
+            if(existingCategory == null)
+            {
+                return BadRequest("Invalid CategoryID");
+            } 
+
             var existingProduct = _context.Products.FirstOrDefault(p => p.ProductName == product.ProductName);
             if(existingProduct != null)
             {
@@ -65,7 +71,7 @@ namespace back_end.Areas.Admin.Controllers
             };
 
             _context.Products.Add(newProduct);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(newProduct);
         }

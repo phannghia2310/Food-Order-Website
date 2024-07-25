@@ -137,6 +137,7 @@ public partial class FoodOrderContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_Product_Category");
         });
 
