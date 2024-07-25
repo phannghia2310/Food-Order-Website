@@ -3,23 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\areas\\admin\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:areas\\admin\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\areas\\admin\\models\\chartmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:areas\\admin\\models\\chartmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\data\\foodordercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:data\\foodordercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\phank\\AppData\\Local\\Temp\\.vsdbgsrc\\1ca169b5f8096b3fd01bc738c77225099d363dea7bb508bd774b256157500bca\\Monitor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BECF479A-9380-465E-B52E-6D1B23D5A032}|back-end.csproj|c:\\users\\phank\\onedrive\\documents\\codework\\web\\asp.net\\webapi\\food-delivery\\back-end\\.env||{8B382828-6202-11D1-8870-0000F87579D2}",
@@ -33,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -49,52 +42,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Monitor.cs",
-              "DocumentMoniker": "C:\\Users\\phank\\AppData\\Local\\Temp\\.vsdbgsrc\\1ca169b5f8096b3fd01bc738c77225099d363dea7bb508bd774b256157500bca\\Monitor.cs",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\1ca169b5f8096b3fd01bc738c77225099d363dea7bb508bd774b256157500bca\\Monitor.cs",
-              "ToolTip": "C:\\Users\\phank\\AppData\\Local\\Temp\\.vsdbgsrc\\1ca169b5f8096b3fd01bc738c77225099d363dea7bb508bd774b256157500bca\\Monitor.cs [Read Only]",
-              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\1ca169b5f8096b3fd01bc738c77225099d363dea7bb508bd774b256157500bca\\Monitor.cs [Read Only]",
-              "ViewState": "AQIAAE4AAAAAAAAAAADgv1cAAAACAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-25T13:31:51.781Z",
-              "EditorCaption": " [Read Only]"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ChartModel.cs",
-              "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Areas\\Admin\\Models\\ChartModel.cs",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Models\\ChartModel.cs",
-              "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Areas\\Admin\\Models\\ChartModel.cs",
-              "RelativeToolTip": "Areas\\Admin\\Models\\ChartModel.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAcAAAA",
+              "Title": "FoodOrderContext.cs",
+              "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Data\\FoodOrderContext.cs",
+              "RelativeDocumentMoniker": "Data\\FoodOrderContext.cs",
+              "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Data\\FoodOrderContext.cs",
+              "RelativeToolTip": "Data\\FoodOrderContext.cs",
+              "ViewState": "AQIAAHwAAAAAAAAAAAAAAAsAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-25T13:28:18.124Z",
+              "WhenOpened": "2024-07-25T13:46:17.209Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Areas\\Admin\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\HomeController.cs",
-              "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Areas\\Admin\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "Areas\\Admin\\Controllers\\HomeController.cs",
-              "ViewState": "AQIAAJoAAAAAAAAAAADwv/oAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-25T11:39:24.753Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAC0AAAAAAAAAAAAAADsAAABLAAAA",
+              "ViewState": "AQIAAC0AAAAAAAAAAAAAADMAAAA3AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-25T07:48:24.926Z",
               "EditorCaption": ""
@@ -109,12 +76,11 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AQIAAB4AAAAAAAAAAIBPwCsAAAAEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-07-25T04:20:36.892Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-25T04:20:36.892Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": ".env",
               "DocumentMoniker": "C:\\Users\\phank\\OneDrive\\Documents\\CODEWORK\\WEB\\ASP.NET\\WebAPI\\Food-Delivery\\back-end\\.env",
               "RelativeDocumentMoniker": ".env",
@@ -122,8 +88,7 @@
               "RelativeToolTip": ".env",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-07-25T03:21:32.54Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-25T03:21:32.54Z"
             }
           ]
         }
