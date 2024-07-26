@@ -1,4 +1,5 @@
-﻿using back_end.Data;
+﻿using Azure.Storage.Blobs;
+using back_end.Data;
 using back_end.Helpers;
 using back_end.Models;
 using back_end.Services;
@@ -19,15 +20,15 @@ namespace back_end.Controllers
     {
         private readonly FoodOrderContext _context;
         private readonly UserService _service;
+        private readonly BlobServiceClient _blobService;
         private readonly IConfiguration _configuration;
-        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(FoodOrderContext contex, UserService service, IConfiguration configuration, ILogger<AuthController> logger)
+        public AuthController(FoodOrderContext contex, UserService service, IConfiguration configuration, BlobServiceClient blobService)
         {
             _context = contex;
             _service = service;
             _configuration = configuration;
-            _logger = logger;
+            _blobService = blobService;
         }
 
         [HttpPost("register")]
@@ -73,8 +74,6 @@ namespace back_end.Controllers
         [HttpPost("signin/google")]
         public async Task<IActionResult> SignInWithGoogle([FromBody] GoogleSignInRequestModel request)
         {
-            _logger.LogInformation($"Google Client ID: {_configuration["GoogleKeys:ClientId"]}");
-
             var payload = await ValidateGoogleTokenAsync(request.idToken!);
             if(payload == null)
             {
@@ -140,50 +139,27 @@ namespace back_end.Controllers
                 return BadRequest("Image file is not selected");
             }
 
-            // Define both upload paths
-            var adminUploadFolder = Path.Combine(@"C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\front-end\admin-site\public\img", "user");
-            var customerUploadFolder = Path.Combine(@"C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\front-end\customer-site\public\assets", "user");
+            try
+            {
+                var containerName = _configuration["AzureBlobStorage:ContainerName"];
+                var containerClient = _blobService.GetBlobContainerClient(containerName);
 
-            // Ensure both directories exist
-            if (!Directory.Exists(adminUploadFolder))
-            {
-                Directory.CreateDirectory(adminUploadFolder);
-            }
-            if (!Directory.Exists(customerUploadFolder))
-            {
-                Directory.CreateDirectory(customerUploadFolder);
-            }
+                await containerClient.CreateIfNotExistsAsync();
 
-            // Generate file name and paths
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            var adminFilePath = Path.Combine(adminUploadFolder, fileName);
-            var customerFilePath = Path.Combine(customerUploadFolder, fileName);
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                var blobClient = containerClient.GetBlobClient(fileName);
 
-            // Check and delete existing files with the same name in both directories
-            var existingAdminFilePath = Directory.GetFiles(adminUploadFolder, fileName).FirstOrDefault();
-            var existingCustomerFilePath = Directory.GetFiles(customerUploadFolder, fileName).FirstOrDefault();
-            if (existingAdminFilePath != null)
-            {
-                System.IO.File.Delete(existingAdminFilePath);
-            }
-            if (existingCustomerFilePath != null)
-            {
-                System.IO.File.Delete(existingCustomerFilePath);
-            }
+                using (var stream = file.OpenReadStream())
+                {
+                    await blobClient.UploadAsync(stream, true);
+                }
 
-            // Save the file to both directories
-            using (var stream = new FileStream(adminFilePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
+                return Ok(new { imagePath = fileName });
             }
-            using (var stream = new FileStream(customerFilePath, FileMode.Create))
+            catch (Exception ex)
             {
-                await file.CopyToAsync(stream);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-
-            // Return the relative path (assuming it's the same for both)
-            var relativePath = Path.Combine(fileName).Replace("\\", "/");
-            return Ok(new { imagePath = relativePath });
         }
  
         private async Task<GoogleJsonWebSignature.Payload> ValidateGoogleTokenAsync(string idToken)
@@ -234,13 +210,21 @@ namespace back_end.Controllers
                 throw new Exception("Could not download profile picture");
             }
 
+            var containerName = _configuration["AzureBlobStorage:ContainerName"];
+            var containerClient = _blobService.GetBlobContainerClient(containerName);
+
+            await containerClient.CreateIfNotExistsAsync();
+
             var pictureBytes = await response.Content.ReadAsByteArrayAsync();
             var fileExtension = ".png";
             var fileName = $"{pictureUrl.Replace("https://lh3.googleusercontent.com/a/", "")}{fileExtension}";
-            var filePath = Path.Combine(@"C:\Users\phank\OneDrive\Documents\CODEWORK\WEB\ASP.NET\WebAPI\Food-Delivery\front-end\customer-site\public\assets\user", fileName);
+            var blobClient = containerClient.GetBlobClient(fileName);
 
-            await System.IO.File.WriteAllBytesAsync(filePath, pictureBytes);
-
+            using (var stream = new MemoryStream(pictureBytes))
+            {
+                await blobClient.UploadAsync(stream, true);
+            }
+            
             return fileName;
         } 
     }

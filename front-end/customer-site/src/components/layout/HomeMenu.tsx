@@ -4,18 +4,17 @@ import HomeMenuItemCard from "./HomeMenuItemCard";
 import MenuItem from "@/types/MenuItem";
 import SectionHeader from "./SectionHeader";
 import { SectionProps } from "@/types/SectionProps";
-import { getItemByCategory } from "@/app/api/menu-items/api";
 
 const HomeMenu = ({ className }: SectionProps) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
-    getItemByCategory(1).then((response) => {
-      setMenuItems(response.data);
-    }).catch(error => {
-      console.log(error);
-    });
-  }, []);
+    fetch('/api/menu-items?id=1')
+      .then((response) => response.json())
+      .then((data) => {
+        setMenuItems(data);
+      });
+    }, []);
 
   return (
     <section className={className}>

@@ -6,7 +6,6 @@ import EmailInput from "@/components/common/form/EmailInput";
 import PasswordInput from "@/components/common/form/PasswordInput";
 import NameInput from "@/components/common/form/NameInput";
 import { useRouter } from "next/navigation";
-import { registerUser, signinWithGoogle } from "../api/users/api";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 const RegisterPage = () => {
@@ -24,13 +23,21 @@ const RegisterPage = () => {
     setError("");
 
     try {
-      const response = await registerUser(name, email, password);
-      if (response.status === 200) {
+      const response = await fetch('/api/user?method=register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (response.ok) {
         setUserCreated(true);
       }
     } catch (error: any) {
-      if(error.response != null) {
-        setError(error.response.data);
+      if(error.message.startWith('HTTP error!')) {
+        const errorResponse = await error.response.json();
+        setError(errorResponse);
       }
       else {
         setError("An error occurred while registering. Please try again.");
@@ -46,14 +53,21 @@ const RegisterPage = () => {
 
     try {
       const idToken = response.credential;
-      const apiResponse = await signinWithGoogle(idToken);
-      if (apiResponse.status === 200) {
-        const { token, user } = apiResponse.data;
+      console.log(idToken);
+      const apiResponse = await fetch('/api/users?method=signin-google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idToken }),
+      });
+      if (apiResponse.ok) {
+        const { token, user } = await apiResponse.json();
         localStorage.setItem("token", token);
         localStorage.setItem("customer", JSON.stringify(user));
         window.location.assign("/");
       } else {
-        setError(apiResponse.data);
+        setError(await apiResponse.json());
       }
     } catch (err) {
       setError("There's something wrong. Google login failed");
