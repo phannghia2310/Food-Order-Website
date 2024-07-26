@@ -2,7 +2,6 @@
 import { Button, Input, Textarea } from "@nextui-org/react";
 import { FormEvent, LegacyRef, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { SendInquiry } from "@/app/api/contact/route";
 
 const ContactUsForm = () => {
   const [submitting, setSubmitting] = useState(false);
@@ -33,8 +32,24 @@ const ContactUsForm = () => {
           message: formData.get("message") as string,
         };
 
-        await SendInquiry(contactModel);
-        toast.success("Inquiry sent successfully");
+        await fetch('/api/contact?method=send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(contactModel),
+        })
+          .then((response) => {
+            if (response.ok) {
+              toast.success("Inquiry sent successfully");
+            } else {
+              toast.error("Inquiry sent fail");
+              console.log(response);
+            }
+          })
+          .catch((error) => {
+            console.log("Error: ", error);
+          });
       }
     }
     catch (error) {

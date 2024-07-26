@@ -4,7 +4,6 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { FormEvent, useState } from "react";
 import EmailInput from "@/components/common/form/EmailInput";
 import PasswordInput from "@/components/common/form/PasswordInput";
-import { jwtDecode } from 'jwt-decode';
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -26,12 +25,9 @@ const LoginPage = () => {
         body: JSON.stringify({ email, password }),
       });
       if (response.ok) {
-        const { token, user } = await response.json();
-        const userData = jwtDecode(token);
-        console.log(token, userData);
+        const { token } = await response.json();
         localStorage.setItem("token", token);
-        localStorage.setItem("customer", JSON.stringify(user));
-        // window.location.assign("/");
+        window.location.assign("/");
       } else {
         const errorResponse = await response.json();
         setError(typeof errorResponse === 'string' ? errorResponse : JSON.stringify(errorResponse));
@@ -59,11 +55,10 @@ const LoginPage = () => {
         body: JSON.stringify({ idToken }),
       });
       if (apiResponse.ok) {
-        const { token, user } = await apiResponse.json();
+        const { token } = await apiResponse.json();
         console.log(token);
         localStorage.setItem("token", token);
-        localStorage.setItem("customer", JSON.stringify(user));
-        // window.location.assign("/");
+        window.location.assign("/");
       } else {
         const errorResponse = await apiResponse.json();
         setError(typeof errorResponse === 'string' ? errorResponse : JSON.stringify(errorResponse));

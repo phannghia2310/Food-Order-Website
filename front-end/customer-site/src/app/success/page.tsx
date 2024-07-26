@@ -3,7 +3,6 @@
 import { useEffect, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CartContext } from "@/util/ContextProvider";
-import { capturePayPalOrder } from "../api/checkout/route";
 import toast from "react-hot-toast";
 
 const SuccessPage = () => {
@@ -28,9 +27,22 @@ const SuccessPage = () => {
   }, []);
 
   useEffect(() => {
-
     if (token && orderModel) {
-      capturePayPalOrder(token as string, orderModel)
+      fetch(`/api/checkout?method=capture-paypal-order&orderId=${token}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderModel),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((error) => {
+              throw new Error(error.error || "Failed to capture PayPal order");
+            });
+          }
+          return response.json();
+        })
         .then(() => {
           toast.success("Payment success!");
           clearCart();

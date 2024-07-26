@@ -7,7 +7,6 @@ import { AppContextProvider } from "../util/ContextProvider";
 import { Toaster } from "react-hot-toast";
 import PrelineScript from "@/util/PrelineScript";
 import { UIProvider } from "@/util/UIProvider";
-import { useEffect } from "react";
 import ChatButton from "@/components/layout/ChatButton";
 
 export const metadata: Metadata = {
@@ -67,7 +66,7 @@ export default function RootLayout({
           </main>
         </UIProvider>
         <PrelineScript />
-        {/* <ChatButton /> */}
+        <ChatButton />
       </body>
     </html>
   );

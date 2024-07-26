@@ -14,7 +14,6 @@ import { EyeFilledIcon } from "@/icons/EyeFilledIcon";
 import { TrashIcon } from "@/icons/TrashIcon";
 import { CheckIcon } from "@/icons/CheckIcon";
 import OrderStatusCell from "./StatusCell";
-import { changeStatus } from "@/app/api/orders/api";
 import toast from "react-hot-toast";
 
 interface OrdersTableProps {
@@ -31,14 +30,22 @@ const OrdersTable = ({ orders = [], isAdmin }: OrdersTableProps) => {
 
   const changStatusOrder = useCallback(async (orderId: any) => {
     try {
-      const response = await changeStatus(orderId);
-      console.log(response);
-      const updatedOrder = response.data;
-      setOrderList((prevOrders) =>
-        prevOrders.map((order) =>
-          order.orderId === orderId ? updatedOrder : order
-        )
+      const response = await fetch(
+        `/api/orders?detail=change-status&id=${orderId}`,
+        {
+          method: "PUT",
+        }
       );
+
+      if (response.ok) {
+        const data = await response.json();
+
+        console.log(data);
+        setOrderList((prevOrders) =>
+          prevOrders.map((order) => (order.orderId === orderId ? data : order))
+        );
+      }
+
       toast.success("Success to chang order status");
     } catch (error) {
       toast.error("Failed to change order status");
@@ -46,9 +53,10 @@ const OrdersTable = ({ orders = [], isAdmin }: OrdersTableProps) => {
     }
   }, []);
 
-  function getReadableDateTime(dateString: string) {
+  function getReadableDateTime(dateString: string | undefined) {
+    if (!dateString) return "";
     return dateString.replace("T", " ").substring(0, 16);
-  };
+  }
 
   return (
     <Table
@@ -102,23 +110,20 @@ const OrdersTable = ({ orders = [], isAdmin }: OrdersTableProps) => {
                       <EyeFilledIcon className={"w-6"} />
                     </Link>
                   </Tooltip>
-                  {(order.status === 0 && order.payment === 'COD') || (order.status === 1 && order.payment === 'PAYPAL') && (
-                    <Tooltip content="Cancel">
-                      <button
-                        onClick={() => changStatusOrder(order.orderId)}
-                      >
-                        <TrashIcon className={"w-6"} />
-                      </button>
-                    </Tooltip>
-                  )}
+                  {(order.status === 0 && order.payment === "COD") ||
+                    (order.status === 1 && order.payment === "PAYPAL" && (
+                      <Tooltip content="Cancel">
+                        <button onClick={() => changStatusOrder(order.orderId)}>
+                          <TrashIcon className={"w-6"} />
+                        </button>
+                      </Tooltip>
+                    ))}
                   {order.status === 3 && (
                     <Tooltip content="Accept">
-                    <button
-                      onClick={() => changStatusOrder(order.orderId)}
-                    >
-                      <CheckIcon className={"w-6"} />
-                    </button>
-                  </Tooltip>
+                      <button onClick={() => changStatusOrder(order.orderId)}>
+                        <CheckIcon className={"w-6"} />
+                      </button>
+                    </Tooltip>
                   )}
                 </div>
               </TableCell>

@@ -1,34 +1,51 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
+import { NextRequest, NextResponse } from 'next/server';
+import axios from 'axios';
 
 const API_URL = "https://app-food-order.azurewebsites.net";
 
-const sendInquiry = async (req: NextApiRequest, res: NextApiResponse) => {
-  const contactModel = req.body;
+export async function POST(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const method = searchParams.get('method');
+
+  console.log(`Received POST request at method: ${method}`);
 
   try {
-    const response = await axios.post(
-      `${API_URL}/customer/cuscontact/send-inquiry`,
-      contactModel
-    );
-    res.status(200).json(response.data);
+    if (method === 'send') {
+      const contactModel = await req.json().catch((err) => {
+        throw new Error('Invalid JSON');
+      });
+
+      const response = await axios.post(
+        `${API_URL}/customer/cuscontact/send-inquiry`,
+        contactModel,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      return NextResponse.json(response.data);
+
+    } else {
+      return NextResponse.json({ error: 'Endpoint not found' }, { status: 404 });
+    }
   } catch (error: any) {
-    res
-      .status(500)
-      .json({ error: "Failed to send inquiry", details: error.message });
+    if (error instanceof SyntaxError) {
+      return NextResponse.json({ error: 'Invalid JSON', details: error.message }, { status: 400 });
+    }
+    return NextResponse.json({ error: 'Failed to process request', details: error.message }, { status: 500 });
   }
-};
+}
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { method, url } = req;
+export async function GET(req: NextRequest) {
+  return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
+}
 
-  switch (true) {
-    case method === "POST" && url?.includes("/save-message"):
-      return sendInquiry(req, res);
-    default:
-      res.setHeader("Allow", ["POST"]);
-      res.status(405).end(`Method ${method} Not Allowed`);
-  }
-};
+export async function PUT(req: NextRequest) {
+  return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
+}
 
-export default handler;
+export async function DELETE(req: NextRequest) {
+  return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
+}

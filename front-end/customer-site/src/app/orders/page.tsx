@@ -6,7 +6,6 @@ import Order from "@/types/Order";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import Loader from "@/components/common/Loader";
-import { getListCart } from "../api/orders/api";
 
 const OrdersPage = () => {
   const { data: profileData, loading } = useProfile();
@@ -15,12 +14,13 @@ const OrdersPage = () => {
 
   useEffect(() => {
     if (profileData?.userId) {
-      getListCart(profileData.userId)
-        .then((res) => {
-          setOrders(res.data);
+      fetch(`/api/orders?detail=list&id=${profileData.userId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setOrders(data);
         })
-        .catch((err) => {
-          console.error("Failed to fetch orders:", err);
+        .catch((error) => {
+          console.error("Failed to fetch orders:", error);
         });
     }
   }, [profileData?.userId]);

@@ -1,57 +1,65 @@
-// src/app/api/checkout/route.ts
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
 const API_URL = "https://app-food-order.azurewebsites.net";
 
-const codPayment = async (req: NextApiRequest, res: NextApiResponse, orderModel: any) => {
+export async function POST(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const method = searchParams.get('method');
+
+  console.log(`Received POST request at method: ${method}`);
+
   try {
-    const response = await axios.post(`${API_URL}/customer/cart/cod`, orderModel, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    res.status(200).json(response.data);
+    if (method === 'cod') {
+      const orderModel = await req.json().catch((err) => {
+        throw new Error('Invalid JSON');
+      });
+
+      const response = await axios.post(`${API_URL}/customer/cart/cod`, orderModel, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return NextResponse.json(response.data);
+
+    } else if (method === 'create-paypal-order') {
+      const orderModel = await req.json().catch((err) => {
+        throw new Error('Invalid JSON');
+      });
+
+      const response = await axios.post(`${API_URL}/customer/cart/create-paypal-order`, orderModel);
+      return NextResponse.json(response.data);
+
+    } else if (method === 'capture-paypal-order') {
+      const orderModel = await req.json().catch((err) => {
+        throw new Error('Invalid JSON');
+      });
+      const orderId = searchParams.get('orderId');
+
+      const response = await axios.post(`${API_URL}/customer/cart/capture-paypal-order`, orderModel, {
+        params: { orderId },
+      });
+      return NextResponse.json(response.data);
+
+    } else {
+      return NextResponse.json({ error: 'Endpoint not found' }, { status: 404 });
+    }
   } catch (error: any) {
-    res.status(500).json({ error: 'Failed to process COD payment', details: error.message });
+    if (error instanceof SyntaxError) {
+      return NextResponse.json({ error: 'Invalid JSON', details: error.message }, { status: 400 });
+    }
+    return NextResponse.json({ error: 'Failed to process request', details: error.message }, { status: 500 });
   }
-};
+}
 
-const createPayPalOrder = async (req: NextApiRequest, res: NextApiResponse, orderModel: any) => {
-  try {
-    const response = await axios.post(`${API_URL}/customer/cart/create-paypal-order`, orderModel);
-    res.status(200).json(response.data);
-  } catch (error: any) {
-    res.status(500).json({ error: 'Failed to create PayPal order', details: error.message });
-  }
-};
+export async function GET(req: NextRequest) {
+  return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
+}
 
-const capturePayPalOrder = async (req: NextApiRequest, res: NextApiResponse, orderModel: any) => {
-  const { orderId } = req.query;
-  try {
-    const response = await axios.post(`${API_URL}/customer/cart/capture-paypal-order`, orderModel, {
-      params: { orderId },
-    });
-    res.status(200).json(response.data);
-  } catch (error: any) {
-    res.status(500).json({ error: 'Failed to capture PayPal order', details: error.message });
-  }
-};
+export async function PUT(req: NextRequest) {
+  return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
+}
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { method, url, body } = req;
-
-  switch (true) {
-    case method === 'POST' && url?.includes('/cod'):
-      return codPayment(req, res, body);
-    case method === 'POST' && url?.includes('/create-paypal-order'):
-      return createPayPalOrder(req, res, body);
-    case method === 'POST' && url?.includes('/capture-paypal-order'):
-      return capturePayPalOrder(req, res, body);
-    default:
-      res.setHeader('Allow', ['POST']);
-      res.status(405).end(`Method ${method} Not Allowed`);
-  }
-};
-
-export default handler;
+export async function DELETE(req: NextRequest) {
+  return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
+}

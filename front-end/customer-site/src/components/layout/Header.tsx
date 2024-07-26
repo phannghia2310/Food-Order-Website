@@ -13,7 +13,7 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 import Link from "next/link";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { ChevronDownIcon } from "@/icons/ChevronDownIcon";
 import { UserIcon } from "@/icons/UserIcon";
 import { ShoppingBagIcon } from "@/icons/ShoppingBagIcon";
@@ -21,25 +21,14 @@ import { SignOutIcon } from "@/icons/SignOutIcon";
 import { usePathname } from "next/navigation";
 import { CartContext } from "../../util/ContextProvider";
 import { useProfile } from "../hooks/useProfile";
-import { useRouter } from "next/navigation";
 
 const Header = () => {
   const { cartProducts } = useContext(CartContext);
   const pathname = usePathname();
   const { data: profileData } = useProfile();
-  const [customer, setCustomer] = useState(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const customerData = localStorage.getItem("customer");
-    if (customerData) {
-      setCustomer(JSON.parse(customerData));
-    }
-  }, []);
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("customer");
     window.location.assign("/login");
   };
 
@@ -86,7 +75,7 @@ const Header = () => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        {customer ? (
+        {profileData ? (
           <div className="flex items-center h-full">
             <Dropdown className="text-gray-300">
               <DropdownTrigger>

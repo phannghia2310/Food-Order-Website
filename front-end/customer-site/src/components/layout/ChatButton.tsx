@@ -5,23 +5,41 @@ import { DotIcon } from "@/icons/DotIcon";
 import { CloseIcon } from "@/icons/CloseIcon";
 import { SendIcon } from "@/icons/SendIcon";
 import * as signalR from "@microsoft/signalr";
-import { SaveMessage } from "@/app/api/chat/route";
-import jwt from "jsonwebtoken";
+import { useProfile } from "@/components/hooks/useProfile";
+import UserProfile from "@/types/UserProfile";
+
+const generateRandomUserData = () => {
+  const randomId = Math.floor(1000 + Math.random() * 9000);
+  return {
+    name: `user${randomId}`,
+    userId: randomId.toString(),
+    phone: "",
+    address: "",
+    imageUrl: "",
+    isAdmin: false,
+  };
+};
 
 const ChatButton = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const { data: profileData } = useProfile();
   const [messages, setMessages] = useState<
     { fromUser: string; message1: string }[]
   >([]);
   const [connection, setConnection] = useState<signalR.HubConnection | null>(
     null
   );
-  const userData = JSON.parse(
-    window.localStorage.getItem("customer") as string
-  );
-  const isListenerSet = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [userData, setUserData] = useState<UserProfile>(generateRandomUserData());
+
+  useEffect(() => {
+    if (profileData) {
+      setUserData(profileData);
+    } else {
+      setUserData(generateRandomUserData());
+    }
+  }, [profileData]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,92 +55,88 @@ const ChatButton = () => {
     }
   }, [isChatOpen]);
 
-  useEffect(() => {
-    const startConnection = async () => {
-      const accessTokenFactory = () => {
-        const secret = "KjNhBHePnuzAIC67D8AlSBrvHHPlV2og4ymSY5jwtQ8=";
-        const payload = {
-          aud: "https://food-order-chat.service.signalr.net",
-          exp: Math.floor(Date.now() / 1000) + 60 * 60,
-          sub: userData.userId.toString(),
-        };
+  const startConnection = async (user: string, userId: string) => {
+    const newConnection = new signalR.HubConnectionBuilder()
+      .withUrl("https://app-food-order.azurewebsites.net/chatHub", {
+        transport: signalR.HttpTransportType.WebSockets,
+        withCredentials: false,
+        accessTokenFactory: () => userId || "",
+      })
+      .withAutomaticReconnect()
+      .build();
 
-        return jwt.sign(payload, secret);
-      };
+    newConnection.onclose(() => {
+      console.log("Connection closed.");
+    });
 
-      const newConnection = new signalR.HubConnectionBuilder()
-        .withUrl("https://food-order-chat.service.signalr.net/client/?hub=chatHub", {
-          transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.ServerSentEvents | signalR.HttpTransportType.LongPolling,
-          accessTokenFactory,
-        })
-        .configureLogging(signalR.LogLevel.Information)
-        .withAutomaticReconnect()
-        .build();
+    newConnection.onreconnecting(() => {
+      console.log("Connection lost. Attempting to reconnect...");
+    });
 
-      newConnection.onclose(() => {
-        console.log("Connection closed.");
-      });
+    newConnection.onreconnected(() => {
+      console.log("Connection reestablished.");
+    });
 
-      newConnection.onreconnecting(() => {
-        console.log("Connection lost. Attempting to reconnect...");
-      });
+    try {
+      await newConnection.start();
+      console.log("Connection started.");
+      const groupId = `group_${userId}`;
+      await newConnection.invoke("JoinGroup", groupId, user);
+      console.log(`${user} has joined ${groupId}`);
+    } catch (err) {
+      console.error("Connection failed:", err);
+    }
 
-      newConnection.onreconnected(() => {
-        console.log("Connection reestablished.");
-      });
+    setConnection(newConnection);
+  };
 
+  const stopConnection = async (connection: signalR.HubConnection, userId: string) => {
+    const groupId = `group_${userId}`;
+    if (connection.state === signalR.HubConnectionState.Connected) {
       try {
-        await newConnection.start();
-        console.log("Connection started.");
-        const user = userData.name;
-        const groupId = `group_${userData.userId}`;
-        await newConnection.invoke("JoinGroup", groupId, user);
-        console.log(`${user} has joined ${groupId}`);
+        await connection.invoke("LeaveGroup", groupId);
+        console.log("Left group:", groupId);
       } catch (err) {
-        console.error("Connection failed:", err);
+        console.error("Failed to leave group:", err);
       }
+    }
+    try {
+      await connection.stop();
+      console.log("Connection stopped.");
+    } catch (err) {
+      console.error("Error stopping connection: ", err);
+    }
+  };
 
-      setConnection(newConnection);
-    };
-
-    if (!connection) {
-      startConnection();
+  useEffect(() => {
+    if (userData && userData.userId) {
+      if (connection) {
+        stopConnection(connection, userData.userId).then(() => {
+          startConnection(userData.name, String(userData.userId));
+        });
+      } else {
+        startConnection(userData.name, userData.userId);
+      }
     }
 
     return () => {
-      const cleanUpConnection = async () => {
-        if (connection) {
-          const groupId = `group_${userData.userId}`;
-          if (connection.state === signalR.HubConnectionState.Connected) {
-            try {
-              await connection.invoke("LeaveGroup", groupId);
-              console.log("Left group:", groupId);
-            } catch (err) {
-              console.error("Failed to leave group:", err);
-            }
-          }
-          try {
-            await connection.stop();
-            console.log("Connection stopped.");
-          } catch (err) {
-            console.error("Error stopping connection: ", err);
-          }
-        }
-      };
-
-      cleanUpConnection();
+      if (connection) {
+        stopConnection(connection, String(userData.userId));
+      }
     };
-  }, []);
+  }, [userData]);
 
   useEffect(() => {
-    if (connection && !isListenerSet.current) {
-      connection.on("ReceiveMessage", (user, message) => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { fromUser: user, message1: message },
-        ]);
-      });
-      isListenerSet.current = true;
+    if (connection) {
+      const handleReceiveMessage = async (user: any, message: any) => {
+        setMessages((prevMessages) => [...prevMessages, { fromUser: user, message1: message }]);
+      };
+
+      connection.on("ReceiveMessage", handleReceiveMessage);
+
+      return () => {
+        connection.off("ReceiveMessage", handleReceiveMessage);
+      };
     }
   }, [connection]);
 
@@ -142,21 +156,34 @@ const ChatButton = () => {
 
     if (connection?.state === signalR.HubConnectionState.Connected) {
       try {
-        const isAdminInGroup = await connection.invoke<boolean>("CheckAdminInGroup", groupId, "Admin");
+        const isAdminInGroup = await connection.invoke<boolean>(
+          "CheckAdminInGroup",
+          groupId,
+          "Admin"
+        );
         console.log(isAdminInGroup);
 
         connection
           .invoke("SendMessage", groupId, user, message)
           .catch((err) => console.log(err.toString()));
 
-        SaveMessage({
-          FromUser: user,
-          ToUser: "Admin",
-          Message1: message,
-          Timestamp: now,
-          UserId: userData.userId,
-          IsRead: isAdminInGroup ? 1 : 0,
-        }).catch((err) => console.log(err.toString()));
+        await fetch("/api/chat?method=save-message", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            FromUser: user,
+            ToUser: "Admin",
+            Message1: message,
+            Timestamp: now.toISOString(),
+            UserId: userData.userId,
+            IsRead: isAdminInGroup ? 1 : 0,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => console.log("Message saved:", data))
+          .catch((err) => console.log("Error saving message:", err.toString()));
 
         setMessage("");
       } catch (err: any) {

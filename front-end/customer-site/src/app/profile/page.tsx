@@ -26,24 +26,22 @@ const ProfilePage = () => {
     data: UserProfile
   ) {
     event.preventDefault();
-    
+
     const savingPromise = new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch('/api/users?method=update', {
-          method: 'PUT',
+        const response = await fetch("/api/users?method=update", {
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id: profileData?.userId, data}),
+          body: JSON.stringify({ id: profileData?.userId, data }),
         });
         if (response.ok) {
           resolve(response);
           console.log(response);
-          localStorage.removeItem("customer");
-          localStorage.setItem("customer", JSON.stringify(response.json()));
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 2000);
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         } else {
           reject();
         }

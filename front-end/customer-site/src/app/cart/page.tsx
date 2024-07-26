@@ -8,7 +8,6 @@ import { ChevronLeftIcon } from "@/icons/ChevronLeftIcon";
 import { Button, Link } from "@nextui-org/react";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { codPayment, createPayPalOrder } from "../api/checkout/api";
 
 interface ProfileInfo {
   name: string;
@@ -70,12 +69,21 @@ const CartPage = () => {
     };
 
     try {
-      const orderResponse = await codPayment(orderModel);
-      toast.success("Payment success!");
-      clearCart();
-      setTimeout(() => {
-        window.location.assign("/");
-      }, 2000);
+      const orderResponse = await fetch('/api/checkout?method=cod', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderModel),
+      })
+
+      if (orderResponse.ok) {
+        toast.success("Payment success!");
+        clearCart();
+        setTimeout(() => {
+          window.location.assign("/");
+        }, 2000);
+      }
     } catch (error) {
       toast.error("Something went wrong, please try again later.");
       console.log(error);
@@ -108,9 +116,19 @@ const CartPage = () => {
     localStorage.setItem("orderModel", JSON.stringify(orderModel));
 
     try {
-      const response = await createPayPalOrder(orderModel);
-      const { approvalUrl } = response.data;
-      window.location.assign(approvalUrl);
+      const response = await fetch('/api/checkout?method=create-paypal-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderModel),
+      });
+
+      if(response.ok) {
+        const data = await response.json();
+        const { approvalUrl } = data;
+        window.location.assign(approvalUrl);
+      }
     } catch (error) {
       toast.error("Something went wrong, please try again later.");
       console.log(error);

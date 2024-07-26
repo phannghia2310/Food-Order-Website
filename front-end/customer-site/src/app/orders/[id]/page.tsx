@@ -9,7 +9,6 @@ import Order from "@/types/Order";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
-import { getOrderDetails } from "@/app/api/orders/api";
 
 const OrderPage = () => {
   const { id } = useParams();
@@ -27,20 +26,20 @@ const OrderPage = () => {
     }
 
     if (id) {
-      getOrderDetails(id)
-        .then((response) => {
-          console.log(response);
-          setOrder(response.data);
+      fetch(`/api/orders?detail=details&id=${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setOrder(data);
           setInfo({
-            name: response.data.customerName,
-            email: response.data.customerEmail,
-            address: response.data.address,
-            phone: response.data.phone,
+            name: data.customerName,
+            email: data.customerEmail,
+            address: data.address,
+            phone: data.phone,
           });
         })
         .catch((error) => {
-          console.error("Error fetching order:", error.response.data);
-        });;
+          console.error("Error fetching order:", error);
+        });
     }
   }, [id]);
 
