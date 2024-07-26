@@ -58,7 +58,7 @@ export function User() {
     const getBlobUrl = (imageUrl) => {
       const containerUrl = import.meta.env.VITE_AZURE_BLOB_URL;
       return imageUrl ? `${containerUrl}/${imageUrl}` : DefaultProduct;
-  };
+    };
 
     return (
         <div className="mt-12 mb-8 flex flex-col gap-12">

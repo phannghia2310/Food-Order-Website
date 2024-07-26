@@ -938,6 +938,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "back_end.Controllers.AuthController",
+    "Method": "GetUserByEmail",
+    "RelativePath": "customer/Auth/user/{email}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "back_end.Controllers.CartController",
     "Method": "CapturePaypaOrder",
     "RelativePath": "customer/Cart/capture-paypal-order",

@@ -3,6 +3,23 @@ import axios from 'axios';
 
 const API_URL = "https://app-food-order.azurewebsites.net";
 
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const method = searchParams.get('method');
+  const email = searchParams.get('email');
+
+  console.log(`Received GET request at method: ${method}`);
+
+  try {
+    if (method === 'get-by-email' && email) {
+      const response = axios.get(`${API_URL}/customer/auth/user/${email}`);
+      return NextResponse.json((await response).data);
+    }
+  } catch (error: any) {
+    return NextResponse.json({ error: 'Failed to get user by email', details: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const method = searchParams.get('method');

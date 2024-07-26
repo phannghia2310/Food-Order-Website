@@ -43,6 +43,11 @@ const Header = () => {
     window.location.assign("/login");
   };
 
+  const getBlobUrl = (imageUrl: any) => {
+    const containerUrl = process.env.NEXT_PUBLIC_AZURE_BLOB_URL;
+    return `${containerUrl}/${imageUrl}`;
+  };
+
   return (
     <Navbar
       className="font-semibold bg-dark py-3"
@@ -89,7 +94,7 @@ const Header = () => {
                   className="bg-transparent h-full"
                   startContent={
                     <Avatar
-                      src={profileData?.imageUrl ? `/assets/user/${profileData.imageUrl}` : ""}
+                      src={getBlobUrl(profileData?.imageUrl)}
                       isBordered
                       color="primary"
                       size="sm"

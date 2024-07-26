@@ -4,7 +4,7 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { FormEvent, useState } from "react";
 import EmailInput from "@/components/common/form/EmailInput";
 import PasswordInput from "@/components/common/form/PasswordInput";
-import { signinUser, signinWithGoogle } from "../api/users/api";
+import { jwtDecode } from 'jwt-decode';
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -18,14 +18,23 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const response = await signinUser(email, password);
-      if (response.status === 200) {
-        const { token, user } = response.data;
+      const response = await fetch('/api/users?method=signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      if (response.ok) {
+        const { token, user } = await response.json();
+        const userData = jwtDecode(token);
+        console.log(token, userData);
         localStorage.setItem("token", token);
         localStorage.setItem("customer", JSON.stringify(user));
-        window.location.assign("/");
+        // window.location.assign("/");
       } else {
-        setError(response.data);
+        const errorResponse = await response.json();
+        setError(typeof errorResponse === 'string' ? errorResponse : JSON.stringify(errorResponse));
       }
     } catch (err) {
       setError("There's something wrong. Login failed");
@@ -42,15 +51,22 @@ const LoginPage = () => {
     try {
       const idToken = response.credential;
       console.log(idToken);
-      const apiResponse = await signinWithGoogle(idToken);
-      console.log(apiResponse);
-      if (apiResponse.status === 200) {
-        const { token, user } = apiResponse.data;
+      const apiResponse = await fetch('/api/users?method=signin-google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idToken }),
+      });
+      if (apiResponse.ok) {
+        const { token, user } = await apiResponse.json();
+        console.log(token);
         localStorage.setItem("token", token);
         localStorage.setItem("customer", JSON.stringify(user));
-        window.location.assign("/");
+        // window.location.assign("/");
       } else {
-        setError(apiResponse.data);
+        const errorResponse = await apiResponse.json();
+        setError(typeof errorResponse === 'string' ? errorResponse : JSON.stringify(errorResponse));
       }
     } catch (err) {
       setError("There's something wrong. Google login failed");

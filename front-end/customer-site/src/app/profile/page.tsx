@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 import React, { FormEvent, useEffect } from "react";
 import toast from "react-hot-toast";
 import Loader from "@/components/common/Loader";
-import { updateUser } from "../api/users/api";
 
 const ProfilePage = () => {
   const { data: profileData, loading } = useProfile();
@@ -30,15 +29,21 @@ const ProfilePage = () => {
     
     const savingPromise = new Promise(async (resolve, reject) => {
       try {
-        const response = await updateUser(profileData?.userId, data);
-        console.log(response.data);
-        if (response.status === 200) {
+        const response = await fetch('/api/users?method=update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: profileData?.userId, data}),
+        });
+        if (response.ok) {
           resolve(response);
+          console.log(response);
           localStorage.removeItem("customer");
-          localStorage.setItem("customer", JSON.stringify(response.data));
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          localStorage.setItem("customer", JSON.stringify(response.json()));
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 2000);
         } else {
           reject();
         }

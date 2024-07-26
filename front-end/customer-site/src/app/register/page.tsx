@@ -23,7 +23,7 @@ const RegisterPage = () => {
     setError("");
 
     try {
-      const response = await fetch('/api/user?method=register', {
+      const response = await fetch('/api/users?method=register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ const RegisterPage = () => {
     } catch (error: any) {
       if(error.message.startWith('HTTP error!')) {
         const errorResponse = await error.response.json();
-        setError(errorResponse);
+        setError(typeof errorResponse === 'string' ? errorResponse : JSON.stringify(errorResponse));
       }
       else {
         setError("An error occurred while registering. Please try again.");
@@ -67,7 +67,8 @@ const RegisterPage = () => {
         localStorage.setItem("customer", JSON.stringify(user));
         window.location.assign("/");
       } else {
-        setError(await apiResponse.json());
+        const errorResponse = await apiResponse.json();
+        setError(typeof errorResponse === 'string' ? errorResponse : JSON.stringify(errorResponse));
       }
     } catch (err) {
       setError("There's something wrong. Google login failed");

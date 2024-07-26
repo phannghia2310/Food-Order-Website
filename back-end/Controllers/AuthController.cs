@@ -31,6 +31,24 @@ namespace back_end.Controllers
             _blobService = blobService;
         }
 
+        [HttpGet("user/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            if(string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email cannot be null or empty");
+            }
+
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            return Ok(user);
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel user)
         {

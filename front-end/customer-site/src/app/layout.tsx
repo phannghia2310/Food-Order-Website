@@ -67,7 +67,7 @@ export default function RootLayout({
           </main>
         </UIProvider>
         <PrelineScript />
-        <ChatButton />
+        {/* <ChatButton /> */}
       </body>
     </html>
   );

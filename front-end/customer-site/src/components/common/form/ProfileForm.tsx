@@ -1,10 +1,9 @@
 import React, { FormEvent, useState } from "react";
 import ImageUploader from "../ImageUploader";
-import { Avatar, Button, Checkbox } from "@nextui-org/react";
+import { Avatar, Button } from "@nextui-org/react";
 import { PencilIcon } from "@/icons/PencilIcon";
 import UserProfile from "@/types/UserProfile";
-import { useProfile } from "../../hooks/useProfile";
-import AddressInputs from "./AddressInputs";
+
 
 interface ProfileFormProps {
   user: UserProfile | null;
@@ -16,13 +15,11 @@ const ProfileForm = ({ user, onSave }: ProfileFormProps) => {
   const [userImage, setUserImage] = useState(user?.imageUrl || "");
   const [phone, setPhone] = useState(user?.phone || "");
   const [address, setAddress] = useState(user?.address || "");
-  const [isAdmin, setIsAdmin] = useState(user?.isAdmin || false);
-  const { data: loggedInUserData } = useProfile();
 
-  function handleAddressChange(propName: string, value: string): void {
-    if (propName === "phone") setPhone(value);
-    if (propName === "address") setAddress(value);
-  }
+  const getBlobUrl = (imageUrl: any) => {
+    const containerUrl = process.env.NEXT_PUBLIC_AZURE_BLOB_URL;
+    return `${containerUrl}/${imageUrl}`;
+  };
 
   return (
     <div className="grid grid-cols-6 gap-4">
@@ -31,7 +28,7 @@ const ProfileForm = ({ user, onSave }: ProfileFormProps) => {
           <div className="relative">
             {userImage ? (
               <Avatar
-                src={`/assets/user/${userImage!}`}
+                src={getBlobUrl(userImage)}
                 className="w-[160px] h-[160px]"
               />
             ) : (
@@ -51,7 +48,7 @@ const ProfileForm = ({ user, onSave }: ProfileFormProps) => {
             imageUrl: userImage,
             phone,
             address,
-            isAdmin,
+            isAdmin: false,
           })
         }
       >
@@ -71,25 +68,23 @@ const ProfileForm = ({ user, onSave }: ProfileFormProps) => {
           disabled
           className="input"
         />
-        <AddressInputs
-          addressProps={{ phone, address }}
-          setAddressProps={(propName: string, value: string) =>
-            handleAddressChange(propName, value)
-          }
-          disabled={false}
+        <label> Phone number</label>
+        <input
+          type="tel"
+          placeholder="Phone number"
+          pattern="[0-9]{10}"
+          value={phone ?? ""}
+          onChange={(e) => setPhone(e.target.value)}
+          className="input"
         />
-        {loggedInUserData?.isAdmin && (
-          <div className="my-2">
-            <Checkbox
-              checked={isAdmin}
-              defaultSelected={isAdmin}
-              value={"1"}
-              onChange={(e) => setIsAdmin(e.target.checked)}
-            >
-              Admin
-            </Checkbox>
-          </div>
-        )}
+        <label> Address</label>
+        <input
+          type="text"
+          placeholder="Address"
+          value={address ?? ""}
+          onChange={(e) => setAddress(e.target.value)}
+          className="input"
+        />
         <Button
           type="submit"
           className="mt-2 font-semibold hover:text-white"
