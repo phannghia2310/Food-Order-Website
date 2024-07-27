@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import PrelineScript from "@/util/PrelineScript";
 import { UIProvider } from "@/util/UIProvider";
 import ChatButton from "@/components/layout/ChatButton";
+import ChatBot from "@/components/layout/ChatBot";
 
 export const metadata: Metadata = {
   title: "Fly Pizza: Order Delicious Pizzas Online",
@@ -27,7 +28,7 @@ export default function RootLayout({
         <meta name="description" content={metadata.description!} />
         <meta
           http-equiv="Content-Security-Policy"
-          content="frame-src 'self' blob: https://*.paypal.com https://*.paypal.cn https://*.paypalobjects.com https://objects.paypal.cn https://*.cardinalcommerce.com https://www.google.com https://www.recaptcha.net https://*.qualtrics.com https://bid.g.doubleclick.net/"
+          content="frame-src 'self' blob: https://console.dialogflow.com https://*.paypal.com https://*.paypal.cn https://*.paypalobjects.com https://objects.paypal.cn https://*.cardinalcommerce.com https://www.google.com https://www.recaptcha.net https://*.qualtrics.com https://bid.g.doubleclick.net/"
         />
         <link
           href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,500,700&display=swap"
@@ -67,6 +68,7 @@ export default function RootLayout({
         </UIProvider>
         <PrelineScript />
         <ChatButton />
+        <ChatBot />
       </body>
     </html>
   );
