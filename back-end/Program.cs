@@ -127,6 +127,8 @@ builder.Services.AddAuthentication(options =>
     });
 builder.Services.AddScoped<FoodOrderContext>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IDialogService, DialogService>();
 
 builder.Services.AddCors(options =>
 {

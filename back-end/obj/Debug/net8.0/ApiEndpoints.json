@@ -1117,6 +1117,16 @@
     ]
   },
   {
+    "ContainingType": "back_end.Controllers.DialogflowController",
+    "Method": "DialogAction",
+    "RelativePath": "customer/Dialogflow",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "back_end.Controllers.MenuCategoryController",
     "Method": "GetAllCategory",
     "RelativePath": "customer/MenuCategory",

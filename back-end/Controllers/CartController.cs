@@ -1,12 +1,10 @@
-﻿using back_end.Areas.Admin.Models;
-using back_end.Data;
+﻿using back_end.Data;
 using back_end.Helpers;
 using back_end.Models;
 using back_end.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
-using static back_end.Helpers.PaypalClient;
 
 namespace back_end.Controllers
 {

@@ -57,6 +57,14 @@
               "target": "Package",
               "version": "[1.68.0, )"
             },
+            "Google.Cloud.Dialogflow.V2": {
+              "target": "Package",
+              "version": "[4.20.0, )"
+            },
+            "Google.Protobuf": {
+              "target": "Package",
+              "version": "[3.27.2, )"
+            },
             "Microsoft.AspNetCore.Authentication.Google": {
               "target": "Package",
               "version": "[8.0.6, )"
